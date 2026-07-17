@@ -32,6 +32,9 @@
 
 html {
     scroll-behavior: smooth;
+    font-size: 16px;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
 }
 
 body {
@@ -46,9 +49,9 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+    letter-spacing: -0.01em;
 }
 
-/* Navigation Bar */
 .navbar {
     position: fixed;
     top: 0;
@@ -78,7 +81,6 @@ body {
     opacity: 0.95;
 }
 
-/* Global Buttons */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -125,7 +127,6 @@ body {
     font-size: 0.8rem;
 }
 
-/* Hero Section */
 .hero-section {
     position: relative;
     padding: 180px 24px 80px 24px;
@@ -187,12 +188,13 @@ body {
 .hero-title {
     font-size: 3.5rem;
     font-weight: 800;
-    line-height: 1.1;
+    line-height: 1;
     letter-spacing: -1.5px;
     background: linear-gradient(135deg, #ffffff 50%, rgba(255, 255, 255, 0.65));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 24px;
+    letter-spacing: -0.04em;
 }
 
 .hero-subtitle {
@@ -203,7 +205,6 @@ body {
     font-weight: 400;
 }
 
-/* Features Grid */
 .features-section {
     padding: 40px 24px;
 }
@@ -221,12 +222,10 @@ body {
 
 .feature-card {
     background: var(--bg-card);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 28px;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 32px;
 }
 
 .feature-card:hover {
@@ -248,7 +247,52 @@ body {
     line-height: 1.5;
 }
 
-/* Download Section */
+.showcase-section {
+    padding: 60px 24px;
+    border-top: 1px solid rgba(150, 80, 255, 0.05);
+}
+
+.showcase-section .section-title {
+    text-align: center;
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin-bottom: 36px;
+    letter-spacing: -0.8px;
+}
+
+.showcase-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.showcase-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    aspect-ratio: 16 / 9;
+}
+
+.showcase-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(150, 80, 255, 0.2);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+}
+
+.showcase-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+}
+
 .download-section {
     padding: 80px 24px;
 }
@@ -299,7 +343,7 @@ body {
     text-align: left;
     white-space: nowrap;
     overflow-x: auto;
-    scrollbar-width: none; /* Hide scrollbars for slick look */
+    scrollbar-width: none;
 }
 
 .loadstring-text::-webkit-scrollbar {
@@ -326,7 +370,6 @@ body {
     font-weight: 500;
 }
 
-/* Footer Section */
 .footer {
     border-top: 1px solid rgba(150, 80, 255, 0.05);
     padding: 32px 24px;
@@ -359,7 +402,6 @@ body {
     color: var(--text-muted);
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
     .hero-title {
         font-size: 2.5rem;
