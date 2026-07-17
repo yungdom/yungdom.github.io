@@ -3,19 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maintenance</title>
+    <title>Opium - Premium Roblox Utility</title>
     <link rel="icon" type="image/png" href="artwork/opium.png">
-    <meta name="description" content="The site is currently in maintenance.">
+    <meta name="description" content="Opium. Premium targeting and visual utility suite.">
+    <!-- Google Fonts: Inter & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <main class="maintenance-container">
-        <img src="artwork/opium2.png" alt="Logo" class="logo" draggable="false">
-        <p class="status-text">The site is currently in maintenance.</p>
+    <header class="navbar">
+        <div class="nav-container">
+            <img src="artwork/opium2.png" alt="Opium Logo" class="nav-logo" draggable="false">
+            <div class="nav-actions">
+                <a href="#download" class="btn btn-sm btn-outline">Copy Loadstring</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="hero-section">
+        <div class="hero-bg-gradient"></div>
+        <div class="hero-grid-pattern"></div>
+        <div class="hero-container">
+            <h1 class="hero-title">Precision Defined.</h1>
+            <p class="hero-subtitle">
+                An <b>Universal Roblox Script</b> just made for pure fun!
+            </p>
+        </div>
     </main>
+
+    <section id="features" class="features-section">
+        <div class="section-container">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Tracking</h3>
+                    <p>Absolute behimeth of <b>Aimlock</b> you will experience.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Visuals</h3>
+                    <p>Optimized skeleton and highlight renders with minimal performance hit.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Framework</h3>
+                    <p>Custom made and modular <b>UI Library</b> with built-in theme presets.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="download" class="download-section">
+        <div class="section-container">
+            <div class="download-box">
+                <h2>Use it or Lose it</h2>
+                <p>Run the loadstring below inside of your executor to inject <b>Opium</b>.</p>
+                
+                <div class="loadstring-container">
+                    <div class="loadstring-bar">
+                        <code class="loadstring-text" id="loadstringText">loadstring(game:HttpGet("https://getopium.cc/opium.lua"))()</code>
+                        <button class="btn btn-primary btn-copy" id="copyBtn">
+                            <span id="copyText">Copy</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="download-warning">
+                    To get a key, Contact me on <b>Discord:</b> <span class="discord-tag">saintdrag</span><br>For now the keys are given by hand because of security measures.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <img src="artwork/opium3.png" alt="Opium Logo" class="footer-logo" draggable="false">
+                <p>&copy; 2026 Opium. All rights reserved.</p>
+                <h1>We are not affiliated with any drug related topic.</h1>
+            </div>
+        </div>
+    </footer>
+
     <script src="app.js"></script>
 </body>
 </html>
