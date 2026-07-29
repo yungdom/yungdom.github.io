@@ -49,9 +49,6 @@ body {
     letter-spacing: -0.01em;
 }
 
-/* =========================================
-   Mobile Warning Screen (Blocker)
-   ========================================= */
 .mobile-warning-overlay {
     display: none;
 }
@@ -110,9 +107,6 @@ body {
     100% { border-color: rgba(150, 80, 255, 0.5); box-shadow: 0 0 50px rgba(150, 80, 255, 0.3); }
 }
 
-/* =========================================
-   Navbar
-   ========================================= */
 .navbar {
     position: fixed;
     top: 0;
@@ -148,9 +142,6 @@ body {
     transform: scale(1.03);
 }
 
-/* =========================================
-   Hero Section
-   ========================================= */
 .hero-section {
     position: relative;
     padding: 190px 24px 70px 24px;
@@ -215,9 +206,6 @@ body {
     font-weight: 400;
 }
 
-/* =========================================
-   Features Section
-   ========================================= */
 .features-section {
     padding: 40px 24px;
 }
@@ -292,9 +280,6 @@ body {
     -webkit-text-fill-color: transparent;
 }
 
-/* =========================================
-   Showcase Section & Videos
-   ========================================= */
 .showcase-section {
     padding: 70px 24px;
     border-top: 1px solid rgba(150, 80, 255, 0.08);
@@ -302,9 +287,9 @@ body {
 
 .showcase-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 28px;
-    align-items: start;
+    align-items: stretch;
 }
 
 .showcase-card {
@@ -337,27 +322,17 @@ body {
 }
 
 .video-card {
-    max-width: 840px;
-    margin: 0 auto;
-    background: var(--bg-card);
-    border: 1px solid var(--border-glow);
-    border-radius: 18px;
     padding: 12px;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
-    transition: all 0.35s ease;
-}
-
-.video-card:hover {
-    border-color: rgba(150, 80, 255, 0.4);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(150, 80, 255, 0.2);
+    width: 100%;
 }
 
 .responsive-video {
     position: relative;
-    padding-bottom: 56.25%; /* 16:9 ratio */
+    width: 100%;
+    padding-bottom: 56.25%;
     height: 0;
     overflow: hidden;
-    border-radius: 12px;
+    border-radius: 10px;
     background: #050407;
 }
 
@@ -370,9 +345,6 @@ body {
     border: 0;
 }
 
-/* =========================================
-   Download Section & Code Bar
-   ========================================= */
 .download-section {
     padding: 90px 24px;
 }
@@ -497,9 +469,6 @@ code[class*="language-"] {
     font-weight: 600;
 }
 
-/* =========================================
-   Footer
-   ========================================= */
 .footer {
     border-top: 1px solid rgba(150, 80, 255, 0.08);
     padding: 40px 24px;
