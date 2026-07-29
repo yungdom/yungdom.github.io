@@ -1,4 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // =========================================
+    // Mobile Detection & Enforcement
+    // =========================================
+    const isMobile = () => {
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+        return mobileRegex.test(userAgent) || (window.innerWidth <= 768 && ('ontouchstart' in window || navigator.maxTouchPoints > 0));
+    };
+
+    if (isMobile()) {
+        const desktopContent = document.querySelector('.desktop-content');
+        const mobileOverlay = document.querySelector('.mobile-warning-overlay');
+
+        if (desktopContent) desktopContent.style.display = 'none';
+        if (mobileOverlay) mobileOverlay.style.display = 'flex';
+    }
+
+    // =========================================
+    // Copy Loadstring Functionality
+    // =========================================
     const copyBtn = document.getElementById('copyBtn');
     const copyText = document.getElementById('copyText');
     const loadstringText = document.getElementById('loadstringText');
@@ -15,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 copyBtn.classList.add('copied');
                 copyBtn.style.background = 'rgb(16, 124, 65)';
-                copyBtn.style.boxShadow = '0 0 12px rgba(16, 124, 65, 0.4)';
+                copyBtn.style.boxShadow = '0 0 16px rgba(16, 124, 65, 0.6)';
                 
                 setTimeout(() => {
                     if (copyText) {
@@ -31,6 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // =========================================
+    // Site Protection Shortcuts & Disabling
+    // =========================================
     document.addEventListener('contextmenu', (e) => e.preventDefault());
     document.addEventListener('selectstart', (e) => e.preventDefault());
     
