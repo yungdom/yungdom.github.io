@@ -281,13 +281,6 @@ body {
     line-height: 1.6;
 }
 
-/* =========================================
-   Why Choose opium.cc Section
-   ========================================= */
-.why-section {
-    padding: 60px 24px;
-}
-
 .section-title {
     text-align: center;
     font-size: 2rem;
@@ -299,64 +292,8 @@ body {
     -webkit-text-fill-color: transparent;
 }
 
-.why-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px;
-}
-
-.why-card {
-    background: linear-gradient(145deg, rgba(28, 20, 42, 0.5), rgba(16, 12, 24, 0.7));
-    border: 1px solid rgba(255, 100, 0, 0.18);
-    border-radius: 16px;
-    padding: 32px 26px;
-    position: relative;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
-}
-
-.why-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(255, 100, 0, 0.45);
-    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.5), 0 0 25px rgba(255, 100, 0, 0.18);
-    background: linear-gradient(145deg, rgba(38, 26, 56, 0.65), rgba(20, 14, 30, 0.85));
-}
-
-.why-icon-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    background: rgba(255, 100, 0, 0.1);
-    border: 1px solid rgba(255, 100, 0, 0.25);
-    border-radius: 12px;
-    font-size: 1.25rem;
-    margin-bottom: 18px;
-    box-shadow: 0 4px 12px rgba(255, 100, 0, 0.1);
-}
-
-.why-card h3 {
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-    color: var(--text-primary);
-}
-
-.why-card p {
-    font-size: 0.92rem;
-    color: var(--text-secondary);
-    line-height: 1.6;
-}
-
-.why-card p span {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-}
-
 /* =========================================
-   Showcase Section & Video
+   Showcase Section & Videos
    ========================================= */
 .showcase-section {
     padding: 70px 24px;
@@ -397,20 +334,6 @@ body {
     border-radius: 10px;
     display: block;
     pointer-events: none;
-}
-
-/* Video Wrapper */
-.video-showcase-container {
-    margin-top: 60px;
-    text-align: center;
-}
-
-.video-section-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 24px;
-    color: var(--text-primary);
-    letter-spacing: -0.5px;
 }
 
 .video-card {
