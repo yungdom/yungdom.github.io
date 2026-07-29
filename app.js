@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // =========================================
-    // Mobile Detection & Enforcement
-    // =========================================
+    // Mobile Detection
     const isMobile = () => {
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
         const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
@@ -16,9 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mobileOverlay) mobileOverlay.style.display = 'flex';
     }
 
-    // =========================================
-    // Copy Loadstring Functionality
-    // =========================================
+    // Copy Loadstring Handler
     const copyBtn = document.getElementById('copyBtn');
     const copyText = document.getElementById('copyText');
     const loadstringText = document.getElementById('loadstringText');
@@ -51,9 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // =========================================
-    // Site Protection Shortcuts & Disabling
-    // =========================================
+    // Protection Shortcuts
     document.addEventListener('contextmenu', (e) => e.preventDefault());
     document.addEventListener('selectstart', (e) => e.preventDefault());
     
