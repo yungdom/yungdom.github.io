@@ -53,16 +53,14 @@ body {
    Mobile Warning Screen (Blocker)
    ========================================= */
 .mobile-warning-overlay {
-    display: none; /* Default hidden on Desktop */
+    display: none;
 }
 
 @media (max-width: 768px), (pointer: coarse) {
-    /* Hide the normal website content on mobile */
     .desktop-content {
         display: none !important;
     }
 
-    /* Show the mobile warning screen */
     .mobile-warning-overlay {
         display: flex;
         position: fixed;
@@ -90,11 +88,6 @@ body {
         animation: warningPulse 3s ease-in-out infinite alternate;
     }
 
-    .mobile-icon {
-        font-size: 3rem;
-        margin-bottom: 16px;
-    }
-
     .mobile-warning-title {
         font-size: 1.5rem;
         font-weight: 800;
@@ -118,7 +111,7 @@ body {
 }
 
 /* =========================================
-   Navbar Upgrades
+   Navbar
    ========================================= */
 .navbar {
     position: fixed;
@@ -275,18 +268,6 @@ body {
     opacity: 1;
 }
 
-.feature-icon-wrapper {
-    width: 42px;
-    height: 42px;
-    border-radius: 10px;
-    background: rgba(150, 80, 255, 0.1);
-    border: 1px solid rgba(150, 80, 255, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-
 .feature-card h3 {
     font-size: 1.15rem;
     font-weight: 700;
@@ -353,7 +334,7 @@ body {
 }
 
 /* =========================================
-   Download Section & Buttons
+   Download Section & Lua Bar
    ========================================= */
 .download-section {
     padding: 90px 24px;
@@ -385,7 +366,7 @@ body {
 }
 
 .loadstring-container {
-    max-width: 620px;
+    max-width: 650px;
     margin: 0 auto 24px auto;
 }
 
@@ -401,18 +382,23 @@ body {
     box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
 }
 
-.loadstring-text {
-    font-family: var(--font-mono);
-    color: var(--accent-orange);
-    font-size: 0.85rem;
-    text-align: left;
-    white-space: nowrap;
+.loadstring-pre {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
     overflow-x: auto;
     scrollbar-width: none;
 }
 
-.loadstring-text::-webkit-scrollbar {
+.loadstring-pre::-webkit-scrollbar {
     display: none;
+}
+
+.loadstring-pre code[class*="language-"] {
+    font-family: var(--font-mono) !important;
+    font-size: 0.85rem !important;
+    text-shadow: none !important;
+    background: transparent !important;
 }
 
 .btn {
