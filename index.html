@@ -9,6 +9,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Syntax Highlighting for Lua -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,7 +19,6 @@
     <!-- Mobile Block Overlay -->
     <div class="mobile-warning-overlay">
         <div class="mobile-warning-box">
-            <div class="mobile-icon">💻</div>
             <h1 class="mobile-warning-title">ACCESS DENIED</h1>
             <p class="mobile-warning-text">
                 We currently do not support mobile devices you pleb, come back later.
@@ -47,23 +49,14 @@
             <div class="section-container">
                 <div class="features-grid">
                     <div class="feature-card">
-                        <div class="feature-icon-wrapper">
-                            <span class="feature-icon">🎯</span>
-                        </div>
                         <h3>Tracking</h3>
                         <p>Absolute behemoth of <b>Aimlock</b> you will experience.</p>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon-wrapper">
-                            <span class="feature-icon">👁️</span>
-                        </div>
                         <h3>Visuals</h3>
                         <p>Optimized <b>ESP</b> with minimal performance hit.</p>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon-wrapper">
-                            <span class="feature-icon">⚡</span>
-                        </div>
                         <h3>Framework</h3>
                         <p>Custom made and modular <b>UI Library</b> with built-in theme presets.</p>
                     </div>
@@ -93,7 +86,7 @@
                     
                     <div class="loadstring-container">
                         <div class="loadstring-bar">
-                            <code class="loadstring-text" id="loadstringText">loadstring(game:HttpGet("https://getopium.cc/opium.lua"))()</code>
+                            <pre class="loadstring-pre"><code class="language-lua loadstring-text" id="loadstringText">loadstring(game:HttpGet("https://getopium.cc/opium.lua"))()</code></pre>
                             <button class="btn btn-primary btn-copy" id="copyBtn">
                                 <span id="copyText">Copy</span>
                             </button>
@@ -117,6 +110,9 @@
         </footer>
     </div>
 
+    <!-- Syntax Highlighting Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-lua.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
