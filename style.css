@@ -153,7 +153,7 @@ body {
    ========================================= */
 .hero-section {
     position: relative;
-    padding: 190px 24px 90px 24px;
+    padding: 190px 24px 70px 24px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -219,7 +219,7 @@ body {
    Features Section
    ========================================= */
 .features-section {
-    padding: 50px 24px;
+    padding: 40px 24px;
 }
 
 .section-container {
@@ -282,14 +282,13 @@ body {
 }
 
 /* =========================================
-   Showcase Section
+   Why Choose Opium.cc Section
    ========================================= */
-.showcase-section {
-    padding: 70px 24px;
-    border-top: 1px solid rgba(150, 80, 255, 0.08);
+.why-section {
+    padding: 60px 24px;
 }
 
-.showcase-section .section-title {
+.section-title {
     text-align: center;
     font-size: 2rem;
     font-weight: 800;
@@ -300,23 +299,88 @@ body {
     -webkit-text-fill-color: transparent;
 }
 
+.why-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.why-card {
+    background: linear-gradient(145deg, rgba(28, 20, 42, 0.5), rgba(16, 12, 24, 0.7));
+    border: 1px solid rgba(255, 100, 0, 0.18);
+    border-radius: 16px;
+    padding: 32px 26px;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.why-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 100, 0, 0.45);
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.5), 0 0 25px rgba(255, 100, 0, 0.18);
+    background: linear-gradient(145deg, rgba(38, 26, 56, 0.65), rgba(20, 14, 30, 0.85));
+}
+
+.why-icon-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 100, 0, 0.1);
+    border: 1px solid rgba(255, 100, 0, 0.25);
+    border-radius: 12px;
+    font-size: 1.25rem;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 12px rgba(255, 100, 0, 0.1);
+}
+
+.why-card h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+}
+
+.why-card p {
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.why-card p span {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+/* =========================================
+   Showcase Section & Video
+   ========================================= */
+.showcase-section {
+    padding: 70px 24px;
+    border-top: 1px solid rgba(150, 80, 255, 0.08);
+}
+
 .showcase-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
     gap: 28px;
+    align-items: start;
 }
 
 .showcase-card {
     background: var(--bg-card);
     border: 1px solid var(--border-glow);
-    border-radius: 14px;
+    border-radius: 16px;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 10px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    aspect-ratio: 16 / 9;
 }
 
 .showcase-card:hover {
@@ -327,10 +391,60 @@ body {
 
 .showcase-image {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+    max-height: 520px;
+    object-fit: contain;
+    border-radius: 10px;
     display: block;
     pointer-events: none;
+}
+
+/* Video Wrapper */
+.video-showcase-container {
+    margin-top: 60px;
+    text-align: center;
+}
+
+.video-section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+}
+
+.video-card {
+    max-width: 840px;
+    margin: 0 auto;
+    background: var(--bg-card);
+    border: 1px solid var(--border-glow);
+    border-radius: 18px;
+    padding: 12px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    transition: all 0.35s ease;
+}
+
+.video-card:hover {
+    border-color: rgba(150, 80, 255, 0.4);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(150, 80, 255, 0.2);
+}
+
+.responsive-video {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 ratio */
+    height: 0;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #050407;
+}
+
+.responsive-video iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
 }
 
 /* =========================================
@@ -383,7 +497,6 @@ body {
     overflow: hidden;
 }
 
-/* Override Prism.js box defaults */
 .loadstring-pre,
 pre[class*="language-"] {
     margin: 0 !important;
