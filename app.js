@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // FIX 1: Stricter mobile check so resizing desktop browser window never triggers overlay
     const isMobile = () => {
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
         const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
@@ -19,31 +18,54 @@ document.addEventListener('DOMContentLoaded', () => {
     const copyText = document.getElementById('copyText');
     const loadstringText = document.getElementById('loadstringText');
 
-    if (copyBtn && loadstringText) {
+    if (copyBtn && loadstringText && copyText) {
+        let copyTimeout;
         copyBtn.addEventListener('click', (e) => {
             e.stopPropagation();
+            clearTimeout(copyTimeout);
             
             const textToCopy = loadstringText.textContent.trim();
             
             navigator.clipboard.writeText(textToCopy).then(() => {
-                if (copyText) {
-                    copyText.textContent = 'Copied!';
-                }
-                
-                // FIX 3: Toggle CSS class to allow CSS transition back to normal smoothly
-                copyBtn.classList.add('copied');
-                
+                copyText.style.opacity = '0';
                 setTimeout(() => {
-                    copyBtn.classList.remove('copied');
-                    if (copyText) {
+                    copyText.textContent = 'Copied!';
+                    copyText.style.opacity = '1';
+                    copyBtn.classList.add('copied');
+                }, 150);
+
+                copyTimeout = setTimeout(() => {
+                    copyText.style.opacity = '0';
+                    setTimeout(() => {
                         copyText.textContent = 'Copy';
-                    }
+                        copyText.style.opacity = '1';
+                        copyBtn.classList.remove('copied');
+                    }, 150);
                 }, 2000);
             }).catch(err => {
                 console.error('Failed to copy text: ', err);
             });
         });
     }
+
+    const faqQuestions = document.querySelectorAll('.faq-question');
+    faqQuestions.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const item = btn.closest('.faq-item');
+            const answer = item.querySelector('.faq-answer');
+            const isActive = item.classList.contains('active');
+
+            document.querySelectorAll('.faq-item').forEach(otherItem => {
+                otherItem.classList.remove('active');
+                otherItem.querySelector('.faq-answer').style.maxHeight = null;
+            });
+
+            if (!isActive) {
+                item.classList.add('active');
+                answer.style.maxHeight = answer.scrollHeight + 'px';
+            }
+        });
+    });
 
     document.addEventListener('contextmenu', (e) => e.preventDefault());
     document.addEventListener('selectstart', (e) => e.preventDefault());
