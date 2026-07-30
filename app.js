@@ -1,8 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // FIX 1: Stricter mobile check so resizing desktop browser window never triggers overlay
     const isMobile = () => {
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
         const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
-        return mobileRegex.test(userAgent) || (window.innerWidth <= 768 && ('ontouchstart' in window || navigator.maxTouchPoints > 0));
+        const isTouchScreen = ('ontouchstart' in window || navigator.maxTouchPoints > 0) && matchMedia('(pointer: coarse)').matches;
+        return mobileRegex.test(userAgent) || isTouchScreen;
     };
 
     if (isMobile()) {
@@ -27,17 +29,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (copyText) {
                     copyText.textContent = 'Copied!';
                 }
+                
+                // FIX 3: Toggle CSS class to allow CSS transition back to normal smoothly
                 copyBtn.classList.add('copied');
-                copyBtn.style.background = 'rgb(16, 124, 65)';
-                copyBtn.style.boxShadow = '0 0 16px rgba(16, 124, 65, 0.6)';
                 
                 setTimeout(() => {
+                    copyBtn.classList.remove('copied');
                     if (copyText) {
                         copyText.textContent = 'Copy';
                     }
-                    copyBtn.classList.remove('copied');
-                    copyBtn.style.background = '';
-                    copyBtn.style.boxShadow = '';
                 }, 2000);
             }).catch(err => {
                 console.error('Failed to copy text: ', err);
