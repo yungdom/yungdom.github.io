@@ -53,7 +53,6 @@ body {
     display: none;
 }
 
-/* FIX 1: Only trigger mobile view on actual coarse touch devices, not desktop resized windows */
 @media (hover: none) and (pointer: coarse) {
     .desktop-content {
         display: none !important;
@@ -174,7 +173,6 @@ body {
     100% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
 }
 
-/* FIX 4: Dotty grid pattern with pulse animation */
 .hero-grid-pattern {
     position: absolute;
     top: 0;
@@ -352,7 +350,7 @@ body {
 }
 
 .download-section {
-    padding: 90px 24px;
+    padding: 90px 24px 40px 24px;
 }
 
 .download-box {
@@ -382,7 +380,7 @@ body {
 
 .loadstring-container {
     max-width: 720px;
-    margin: 0 auto 12px auto;
+    margin: 0 auto;
 }
 
 .loadstring-bar {
@@ -458,13 +456,17 @@ code[class*="language-"] {
     filter: brightness(1.1);
 }
 
-/* FIX 3: Smooth transition state back to normal */
 .btn-copy {
     padding: 8px 18px;
     flex-shrink: 0;
-    min-width: 80px;
+    min-width: 85px;
     height: 38px;
     transition: background 0.5s ease, box-shadow 0.5s ease, transform 0.2s ease, filter 0.2s ease;
+}
+
+#copyText {
+    transition: opacity 0.15s ease;
+    display: inline-block;
 }
 
 .btn-copy.copied {
@@ -472,14 +474,130 @@ code[class*="language-"] {
     box-shadow: 0 0 20px rgba(16, 124, 65, 0.8) !important;
 }
 
-/* FIX 2: Ban Warning Text */
 .ban-warning {
     margin-top: 14px;
-    font-size: 0.82rem;
-    color: #ff9d00;
+    font-size: 0.75rem;
+    font-style: italic;
+    color: var(--accent-purple);
     font-weight: 500;
     letter-spacing: 0.01em;
-    text-shadow: 0 0 12px rgba(255, 157, 0, 0.4);
+    text-shadow: 0 0 10px rgba(150, 80, 255, 0.4);
+}
+
+.faq-section {
+    padding: 60px 24px;
+}
+
+.faq-accordion {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.faq-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glow);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.faq-item:hover,
+.faq-item.active {
+    border-color: rgba(150, 80, 255, 0.5);
+    box-shadow: 0 0 20px rgba(150, 80, 255, 0.2);
+}
+
+.faq-question {
+    width: 100%;
+    padding: 20px 24px;
+    background: transparent;
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: pointer;
+    text-align: left;
+    transition: color 0.3s ease;
+}
+
+.faq-question:hover {
+    color: #ffffff;
+}
+
+.faq-icon {
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--accent-purple);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease;
+}
+
+.faq-item.active .faq-icon {
+    transform: rotate(45deg);
+    color: var(--accent-orange);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), padding 0.35s ease;
+    padding: 0 24px;
+}
+
+.faq-item.active .faq-answer {
+    padding: 0 24px 20px 24px;
+}
+
+.faq-answer p {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+
+.cta-neon-section {
+    padding: 40px 24px 80px 24px;
+    text-align: center;
+    overflow: hidden;
+}
+
+.gravity-neon-text {
+    font-size: clamp(1.8rem, 5vw, 3.2rem);
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #ffffff;
+    text-shadow: 
+        0 0 10px rgba(255, 255, 255, 0.8),
+        0 0 20px var(--accent-purple),
+        0 0 40px var(--accent-purple),
+        0 0 80px var(--accent-orange);
+    animation: gravityFloat 4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+    display: inline-block;
+}
+
+@keyframes gravityFloat {
+    0% {
+        transform: translateY(-18px);
+        animation-timing-function: ease-in;
+    }
+    50% {
+        transform: translateY(18px);
+        animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        text-shadow: 
+            0 0 15px rgba(255, 255, 255, 1),
+            0 0 30px var(--accent-orange),
+            0 0 60px var(--accent-orange),
+            0 0 100px var(--accent-purple);
+    }
+    100% {
+        transform: translateY(-18px);
+        animation-timing-function: ease-in;
+    }
 }
 
 .footer {
