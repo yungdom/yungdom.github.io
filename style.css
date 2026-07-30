@@ -560,43 +560,51 @@ code[class*="language-"] {
 }
 
 .cta-neon-section {
-    padding: 40px 24px 80px 24px;
+    padding: 60px 24px 100px 24px;
     text-align: center;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .gravity-neon-text {
     font-size: clamp(1.8rem, 5vw, 3.2rem);
     font-weight: 900;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
     text-transform: uppercase;
-    color: #ffffff;
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--accent-purple);
     text-shadow: 
-        0 0 10px rgba(255, 255, 255, 0.8),
-        0 0 20px var(--accent-purple),
-        0 0 40px var(--accent-purple),
-        0 0 80px var(--accent-orange);
+        0 0 12px rgba(150, 80, 255, 0.8),
+        0 0 25px rgba(150, 80, 255, 0.5),
+        0 0 50px rgba(150, 80, 255, 0.3);
     animation: gravityFloat 4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
     display: inline-block;
+    padding: 20px;
 }
 
 @keyframes gravityFloat {
     0% {
         transform: translateY(-18px);
-        animation-timing-function: ease-in;
+        -webkit-text-stroke: 1.5px var(--accent-purple);
+        text-shadow: 
+            0 0 12px rgba(150, 80, 255, 0.8),
+            0 0 25px rgba(150, 80, 255, 0.5),
+            0 0 50px rgba(150, 80, 255, 0.3);
     }
     50% {
         transform: translateY(18px);
-        animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        -webkit-text-stroke: 1.5px var(--accent-orange);
         text-shadow: 
-            0 0 15px rgba(255, 255, 255, 1),
-            0 0 30px var(--accent-orange),
-            0 0 60px var(--accent-orange),
-            0 0 100px var(--accent-purple);
+            0 0 15px rgba(255, 100, 0, 0.9),
+            0 0 30px rgba(255, 100, 0, 0.6),
+            0 0 60px rgba(255, 100, 0, 0.35);
     }
     100% {
         transform: translateY(-18px);
-        animation-timing-function: ease-in;
+        -webkit-text-stroke: 1.5px var(--accent-purple);
+        text-shadow: 
+            0 0 12px rgba(150, 80, 255, 0.8),
+            0 0 25px rgba(150, 80, 255, 0.5),
+            0 0 50px rgba(150, 80, 255, 0.3);
     }
 }
 
