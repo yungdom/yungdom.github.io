@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Mobile Detection Logic
     const isMobile = () => {
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
         const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
@@ -14,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mobileOverlay) mobileOverlay.style.display = 'flex';
     }
 
+    // 2. Interactive Loadstring Copy Logic
     const copyBtn = document.getElementById('copyBtn');
     const copyText = document.getElementById('copyText');
     const loadstringText = document.getElementById('loadstringText');
@@ -48,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // 3. Dynamic Accordion Logic
     const faqQuestions = document.querySelectorAll('.faq-question');
     faqQuestions.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -67,6 +70,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // 4. Organic Mouse Tilt/Parallax Interaction
+    const featureCards = document.querySelectorAll('.feature-card');
+    const heroBg = document.getElementById('heroBg');
+
+    let mouseX = 0, mouseY = 0;
+    let targetX = 0, targetY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX - window.innerWidth / 2;
+        mouseY = e.clientY - window.innerHeight / 2;
+    });
+
+    function renderDynamicMotion() {
+        targetX += (mouseX - targetX) * 0.05;
+        targetY += (mouseY - targetY) * 0.05;
+
+        if (heroBg) {
+            heroBg.style.transform = `translate(calc(-50% + ${targetX * 0.08}px), calc(-50% + ${targetY * 0.08}px))`;
+        }
+
+        featureCards.forEach((card, i) => {
+            const factor = (i + 1) * 0.008;
+            const tiltX = targetY * factor;
+            const tiltY = -targetX * factor;
+            card.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateZ(0)`;
+        });
+
+        requestAnimationFrame(renderDynamicMotion);
+    }
+
+    renderDynamicMotion();
+
+    // 5. Context Security Handlers
     document.addEventListener('contextmenu', (e) => e.preventDefault());
     document.addEventListener('selectstart', (e) => e.preventDefault());
     
