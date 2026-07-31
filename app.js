@@ -126,7 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 6. Compact Music Player & Album-Sorted Track Manager
     const MUSIC_BASE_URL = 'https://getopium.cc/music/';
     
-    // Explicit Fallback List (Guarantees ALL 20 songs load properly)
     const RAW_FILES = [
         "Busy.flac",
         "Shisha (Bass Boosted).mp3",
@@ -249,15 +248,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         } catch (err) {
-            console.warn('Folder auto-scan restricted. Loading full hardcoded tracks:', err);
+            console.warn('Folder scan restricted. Fallback tracks active.', err);
         }
 
         audioPaths = [...new Set(audioPaths)];
 
-        // Parse metadata for all discovered tracks
         const parsedPlaylist = await Promise.all(audioPaths.map(path => parseEmbeddedAudioMetadata(path)));
         
-        // SORT BY ALBUM (Grouped by album, then alphabetically by title)
+        // SORT BY ALBUM
         parsedPlaylist.sort((a, b) => {
             const albumCompare = a.album.localeCompare(b.album);
             if (albumCompare !== 0) return albumCompare;
@@ -301,7 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isPlaying) {
             audioElement.pause();
         } else {
-            audioElement.play().catch(err => console.log('Audio playback error:', err));
+            audioElement.play().catch(err => console.log('Playback error:', err));
         }
     }
 
@@ -373,37 +371,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initMusicPlayer();
 
-    // 7. Context Security Handlers (Permitting YouTube & Interactive Embeds)
-    document.addEventListener('contextmenu', (e) => e.preventDefault());
-    document.addEventListener('selectstart', (e) => e.preventDefault());
-    
-    document.addEventListener('mousedown', (e) => {
-        if (e.target.closest('a, button, input, select, textarea, #copyBtn, code, .sticky-music-player, iframe, .responsive-video')) {
-            return;
-        }
-        if (e.detail > 0) {
-            e.preventDefault();
-        }
+    // 7. Context Handlers (Allowing Standard Interactive Elements)
+    document.addEventListener('contextmenu', (e) => {
+        if (e.target.closest('input, textarea, iframe')) return;
+        e.preventDefault();
     });
 
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'F12') { 
-            e.preventDefault(); 
-            return; 
-        }
+        if (e.key === 'F12') { e.preventDefault(); return; }
         if (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) {
-            e.preventDefault(); 
-            return;
+            e.preventDefault(); return;
         }
         if (e.ctrlKey && e.key.toUpperCase() === 'U') {
-            e.preventDefault(); 
-            return;
-        }
-        if (e.ctrlKey && e.key.toUpperCase() === 'S') {
-            e.preventDefault(); 
-            return;
+            e.preventDefault(); return;
         }
     });
-
-    document.addEventListener('dragstart', (e) => e.preventDefault());
 });
