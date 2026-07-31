@@ -24,11 +24,31 @@
     --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
 }
 
+/* Global Selection & Drag Prevention */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
     font-family: 'Plus Jakarta Sans', sans-serif;
+
+    /* Prevent text selection */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    /* Prevent element dragging */
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+}
+
+img, svg, a, button {
+    -webkit-user-drag: none;
+    user-drag: none;
+    pointer-events: auto;
 }
 
 html, body {
@@ -284,7 +304,7 @@ html, body {
     z-index: 10;
 }
 
-/* Download Loader Block & Textbox Fix */
+/* Download Loader Block & Textbox */
 .download-section {
     padding: 60px 20px;
 }
@@ -312,7 +332,7 @@ html, body {
     gap: 16px;
 }
 
-/* Prism CSS Overrides for Textbox */
+/* Prism CSS Overrides */
 .loadstring-pre, 
 .loadstring-bar pre, 
 .loadstring-bar code,
@@ -424,7 +444,7 @@ code[class*="language-"] {
     line-height: 1.6;
 }
 
-/* CTA Neon Section - Single Line Text */
+/* CTA Neon Section */
 .cta-neon-section {
     padding: 80px 20px;
     text-align: center;
