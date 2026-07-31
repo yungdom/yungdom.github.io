@@ -52,10 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
             navigator.clipboard.writeText(textToCopy).then(() => {
                 copyText.style.opacity = '0';
                 setTimeout(() => {
-                    copyText.textContent = 'Copied!';
+                    copyText.textContent = 'Copied';
                     copyText.style.opacity = '1';
                     copyBtn.classList.add('copied');
-                }, 150);
+                }, 120);
 
                 copyTimeout = setTimeout(() => {
                     copyText.style.opacity = '0';
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         copyText.textContent = 'Copy';
                         copyText.style.opacity = '1';
                         copyBtn.classList.remove('copied');
-                    }, 150);
+                    }, 120);
                 }, 2000);
             }).catch(err => {
                 console.error('Failed to copy text: ', err);
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 5. Aero Interactive Mouse Parallax
+    // 5. Subtle Mouse Parallax
     const featureCards = document.querySelectorAll('.feature-card');
     const heroBg = document.getElementById('heroBg');
 
@@ -104,18 +104,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function renderDynamicMotion() {
-        targetX += (mouseX - targetX) * 0.05;
-        targetY += (mouseY - targetY) * 0.05;
+        targetX += (mouseX - targetX) * 0.04;
+        targetY += (mouseY - targetY) * 0.04;
 
         if (heroBg) {
-            heroBg.style.transform = `translate(calc(-50% + ${targetX * 0.08}px), calc(-50% + ${targetY * 0.08}px))`;
+            heroBg.style.transform = `translate(calc(-50% + ${targetX * 0.03}px), calc(-50% + ${targetY * 0.03}px))`;
         }
 
         featureCards.forEach((card, i) => {
-            const factor = (i + 1) * 0.008;
+            const factor = (i + 1) * 0.003;
             const tiltX = targetY * factor;
             const tiltY = -targetX * factor;
-            card.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateZ(0)`;
+            card.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
         });
 
         requestAnimationFrame(renderDynamicMotion);
