@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const FILE_NAMES = [
         "Busy.flac",
-        "Shisha (Bass Boosted).mp3",
+        "Shisha.mp3",
         "Cayenne.flac",
         "Sosa.mp3",
         "Chill & Adrenalina.mp3",
