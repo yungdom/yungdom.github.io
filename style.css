@@ -1,3 +1,5 @@
+/* style.css */
+
 :root {
     /* Pure Monochrome & Metallic Palette */
     --accent-white: #ffffff;
@@ -10,12 +12,29 @@
     
     --text-primary: #f4f4f5;
     --text-secondary: #a1a1aa;
-    --text-muted: #52525b;
+    --text-muted: #71717a;
     --heading-color: #ffffff;
     
     --nav-bg: rgba(8, 8, 10, 0.7);
     --footer-bg: rgba(5, 5, 7, 0.9);
-    --loadstring-bg: rgba(10, 10, 13, 0.95);
+    
+    /* Code Box & Interactive Theme Variables */
+    --loadstring-bg: rgba(12, 12, 16, 0.95);
+    --code-text: #e4e4e7;
+    --code-inner-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.7);
+    --code-border: rgba(255, 255, 255, 0.15);
+    
+    --btn-bg: #ffffff;
+    --btn-text: #000000;
+    --btn-hover-bg: #e4e4e7;
+    --btn-copied-bg: #27272a;
+    --btn-copied-text: #ffffff;
+    --btn-copied-border: #3f3f46;
+    
+    --inline-code-bg: rgba(255, 255, 255, 0.08);
+    --selection-bg: rgba(255, 255, 255, 0.2);
+    --selection-color: #ffffff;
+    --grid-pattern-dot: rgba(255, 255, 255, 0.1);
     
     --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --font-mono: 'Fira Code', monospace;
@@ -40,7 +59,25 @@
     --heading-color: #000000;
     --nav-bg: rgba(244, 244, 245, 0.8);
     --footer-bg: rgba(228, 228, 231, 0.9);
-    --loadstring-bg: rgba(24, 24, 27, 0.95);
+    
+    /* Code Box & Interactive Theme Variables (Light Mode) */
+    --loadstring-bg: rgba(232, 232, 237, 0.95);
+    --code-text: #18181b;
+    --code-inner-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+    --code-border: rgba(0, 0, 0, 0.15);
+    
+    --btn-bg: #09090b;
+    --btn-text: #ffffff;
+    --btn-hover-bg: #27272a;
+    --btn-copied-bg: #e4e4e7;
+    --btn-copied-text: #09090b;
+    --btn-copied-border: #d4d4d8;
+    
+    --inline-code-bg: rgba(0, 0, 0, 0.06);
+    --selection-bg: rgba(0, 0, 0, 0.15);
+    --selection-color: #09090b;
+    --grid-pattern-dot: rgba(0, 0, 0, 0.08);
+    
     --border-aero: rgba(0, 0, 0, 0.12);
     --border-aero-hover: rgba(0, 0, 0, 0.3);
     --glass-reflection: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.2) 40%, transparent 100%);
@@ -58,8 +95,8 @@
 }
 
 ::selection {
-    background: rgba(255, 255, 255, 0.2);
-    color: #ffffff;
+    background: var(--selection-bg);
+    color: var(--selection-color);
 }
 
 html {
@@ -91,7 +128,7 @@ body {
     -webkit-backdrop-filter: blur(20px) saturate(140%);
     border: 1px solid var(--border-aero);
     box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.3),
+        0 10px 30px rgba(0, 0, 0, 0.15),
         inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
     position: relative;
 }
@@ -245,7 +282,7 @@ body {
     transform: translate(-50%, -50%);
     width: 600px;
     height: 350px;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--border-aero-hover) 0%, transparent 70%);
     filter: blur(80px);
     pointer-events: none;
     z-index: 0;
@@ -258,7 +295,7 @@ body {
     width: 100%;
     height: 100%;
     background-size: 32px 32px;
-    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-image: radial-gradient(circle, var(--grid-pattern-dot) 1px, transparent 1px);
     z-index: 0;
     pointer-events: none;
     mask-image: radial-gradient(circle at 50% 50%, black 30%, transparent 80%);
@@ -317,7 +354,7 @@ body {
     background: var(--bg-card-hover);
     border-color: var(--border-aero-hover);
     box-shadow: 
-        0 15px 35px rgba(0, 0, 0, 0.4),
+        0 15px 35px rgba(0, 0, 0, 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
@@ -346,7 +383,7 @@ body {
 /* Showcase Section */
 .showcase-section {
     padding: 70px 24px;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid var(--border-aero);
 }
 
 .showcase-grid {
@@ -384,7 +421,7 @@ body {
     overflow: hidden;
     border-radius: 10px;
     background: #000000;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-aero);
 }
 
 .responsive-video iframe {
@@ -430,8 +467,9 @@ body {
 
 .aero-glass-inner {
     background: var(--loadstring-bg);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.7);
+    border: 1px solid var(--code-border);
+    box-shadow: var(--code-inner-shadow);
+    transition: background-color 0.4s ease, border-color 0.4s ease;
 }
 
 .loadstring-bar {
@@ -475,8 +513,17 @@ code[class*="language-"] {
     background: transparent !important;
     white-space: nowrap !important;
     line-height: 1.2 !important;
-    color: #e4e4e7 !important;
+    color: var(--code-text) !important;
+    transition: color 0.4s ease;
 }
+
+/* Prism syntax token overrides for Light Mode */
+[data-theme="light"] .token.keyword { color: #d73a49 !important; }
+[data-theme="light"] .token.string { color: #032f62 !important; }
+[data-theme="light"] .token.function { color: #6f42c1 !important; }
+[data-theme="light"] .token.operator,
+[data-theme="light"] .token.punctuation { color: #24292e !important; }
+[data-theme="light"] .token.comment { color: #6a737d !important; }
 
 .btn {
     display: inline-flex;
@@ -491,19 +538,19 @@ code[class*="language-"] {
 }
 
 .btn-primary {
-    background: #ffffff;
-    color: #000000;
-    border: 1px solid #ffffff;
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    border: 1px solid var(--btn-bg);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-    transition: transform 0.3s var(--ease-elastic), background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.3s var(--ease-elastic), background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    background: #e4e4e7;
-    border-color: #e4e4e7;
-    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+    background: var(--btn-hover-bg);
+    border-color: var(--btn-hover-bg);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .btn-copy {
@@ -519,9 +566,9 @@ code[class*="language-"] {
 }
 
 .btn-copy.copied {
-    background: #27272a !important;
-    color: #ffffff !important;
-    border-color: #3f3f46 !important;
+    background: var(--btn-copied-bg) !important;
+    color: var(--btn-copied-text) !important;
+    border-color: var(--btn-copied-border) !important;
     box-shadow: none !important;
 }
 
@@ -614,7 +661,7 @@ code[class*="language-"] {
 .faq-answer code {
     font-family: var(--font-mono);
     font-size: 0.85rem;
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--inline-code-bg);
     padding: 2px 6px;
     border-radius: 4px;
     color: var(--text-primary);
@@ -645,7 +692,7 @@ code[class*="language-"] {
 
 /* Footer */
 .footer {
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid var(--border-aero);
     padding: 40px 24px;
     background: var(--footer-bg);
     transition: background 0.4s ease;
