@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
         themeToggleBtn.addEventListener('click', () => {
             const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
             document.documentElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
         });
@@ -36,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mobileOverlay) mobileOverlay.style.display = 'flex';
     }
 
-    // 3. Interactive Loadstring Copy Logic
+    // 3. Copy Button Animation & Clipboard Logic
     const copyBtn = document.getElementById('copyBtn');
     const copyText = document.getElementById('copyText');
     const loadstringText = document.getElementById('loadstringText');
@@ -50,20 +49,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const textToCopy = loadstringText.textContent.trim();
             
             navigator.clipboard.writeText(textToCopy).then(() => {
-                copyText.style.opacity = '0';
-                setTimeout(() => {
-                    copyText.textContent = 'Copied';
-                    copyText.style.opacity = '1';
-                    copyBtn.classList.add('copied');
-                }, 120);
+                copyText.textContent = 'Copied!';
+                copyBtn.classList.add('copied');
 
                 copyTimeout = setTimeout(() => {
-                    copyText.style.opacity = '0';
-                    setTimeout(() => {
-                        copyText.textContent = 'Copy';
-                        copyText.style.opacity = '1';
-                        copyBtn.classList.remove('copied');
-                    }, 120);
+                    copyText.textContent = 'Copy';
+                    copyBtn.classList.remove('copied');
                 }, 2000);
             }).catch(err => {
                 console.error('Failed to copy text: ', err);
@@ -71,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 4. Dynamic Accordion Logic
+    // 4. Smooth FAQ Accordion Animation
     const faqQuestions = document.querySelectorAll('.faq-question');
     faqQuestions.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -91,10 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 5. Subtle Mouse Parallax
-    const featureCards = document.querySelectorAll('.feature-card');
+    // 5. Parallax Motion (Hover Safe)
     const heroBg = document.getElementById('heroBg');
-
     let mouseX = 0, mouseY = 0;
     let targetX = 0, targetY = 0;
 
@@ -110,23 +99,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (heroBg) {
             heroBg.style.transform = `translate(calc(-50% + ${targetX * 0.03}px), calc(-50% + ${targetY * 0.03}px))`;
         }
-
-        featureCards.forEach((card, i) => {
-            const factor = (i + 1) * 0.003;
-            const tiltX = targetY * factor;
-            const tiltY = -targetX * factor;
-            card.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
-        });
-
         requestAnimationFrame(renderDynamicMotion);
     }
-
     renderDynamicMotion();
 
-    // 6. Compact Music Player & Album-Sorted Track Manager
+    // 6. Direct Music Player (Instant Local File Initialization)
     const MUSIC_BASE_URL = 'https://getopium.cc/music/';
     
-    const RAW_FILES = [
+    const TRACK_LIST = [
         "Busy.flac",
         "Shisha (Bass Boosted).mp3",
         "Cayenne.flac",
@@ -149,7 +129,16 @@ document.addEventListener('DOMContentLoaded', () => {
         "Africa Twin.mp3"
     ];
 
-    let validPlaylist = [];
+    const validPlaylist = TRACK_LIST.map(filename => {
+        const cleanName = filename.replace(/\.[^/.]+$/, "");
+        return {
+            title: cleanName,
+            artist: "Opium",
+            src: `${MUSIC_BASE_URL}${encodeURIComponent(filename)}`,
+            cover: "artwork/opium.png"
+        };
+    });
+
     let currentTrackIndex = 0;
     let isPlaying = false;
 
@@ -168,125 +157,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const playIcon = playPauseBtn ? playPauseBtn.querySelector('.play-icon') : null;
     const pauseIcon = playPauseBtn ? playPauseBtn.querySelector('.pause-icon') : null;
 
-    function parseEmbeddedAudioMetadata(filePath) {
-        return new Promise((resolve) => {
-            const rawFileName = filePath.split('/').pop().split('?')[0];
-            const fallbackTitle = decodeURIComponent(rawFileName.replace(/\.[^/.]+$/, ""));
-            
-            if (typeof jsmediatags === 'undefined') {
-                resolve({
-                    title: fallbackTitle,
-                    artist: "Opium",
-                    album: "Opium Collection",
-                    src: filePath,
-                    cover: "artwork/opium.png"
-                });
-                return;
-            }
+    function initMusicPlayer() {
+        if (!validPlaylist.length || !audioElement) return;
 
-            jsmediatags.read(filePath, {
-                onSuccess: function(tag) {
-                    const tags = tag.tags || {};
-                    const title = tags.title ? tags.title.trim() : fallbackTitle;
-                    const artist = tags.artist ? tags.artist.trim() : "Opium";
-                    const album = tags.album ? tags.album.trim() : "Opium Collection";
-                    let cover = "artwork/opium.png";
-
-                    if (tags.picture) {
-                        const { data, format } = tags.picture;
-                        let base64String = "";
-                        for (let i = 0; i < data.length; i++) {
-                            base64String += String.fromCharCode(data[i]);
-                        }
-                        cover = `data:${format};base64,${window.btoa(base64String)}`;
-                    }
-
-                    resolve({ title, artist, album, src: filePath, cover });
-                },
-                onError: function() {
-                    resolve({
-                        title: fallbackTitle,
-                        artist: "Opium",
-                        album: "Opium Collection",
-                        src: filePath,
-                        cover: "artwork/opium.png"
-                    });
-                }
-            });
-        });
-    }
-
-    async function fetchMusicPlaylist() {
-        let audioPaths = RAW_FILES.map(file => `${MUSIC_BASE_URL}${file}`);
-
-        try {
-            const dirRes = await fetch(MUSIC_BASE_URL, { cache: 'no-cache' });
-            if (dirRes.ok) {
-                const text = await dirRes.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(text, 'text/html');
-                const links = Array.from(doc.querySelectorAll('a'));
-
-                const fetchedPaths = links
-                    .map(a => a.getAttribute('href'))
-                    .filter(Boolean)
-                    .map(href => {
-                        try {
-                            return new URL(href, MUSIC_BASE_URL).href;
-                        } catch {
-                            return null;
-                        }
-                    })
-                    .filter(fullUrl => {
-                        if (!fullUrl) return false;
-                        const cleanPath = fullUrl.split('?')[0].toLowerCase();
-                        return cleanPath.endsWith('.mp3') || cleanPath.endsWith('.flac');
-                    });
-
-                if (fetchedPaths.length > 0) {
-                    audioPaths = [...audioPaths, ...fetchedPaths];
-                }
-            }
-        } catch (err) {
-            console.warn('Folder scan restricted. Fallback tracks active.', err);
+        if (volumeSlider) {
+            audioElement.volume = parseFloat(volumeSlider.value);
         }
-
-        audioPaths = [...new Set(audioPaths)];
-
-        const parsedPlaylist = await Promise.all(audioPaths.map(path => parseEmbeddedAudioMetadata(path)));
-        
-        // SORT BY ALBUM
-        parsedPlaylist.sort((a, b) => {
-            const albumCompare = a.album.localeCompare(b.album);
-            if (albumCompare !== 0) return albumCompare;
-            return a.title.localeCompare(b.title);
-        });
-
-        return parsedPlaylist;
-    }
-
-    async function initMusicPlayer() {
-        validPlaylist = await fetchMusicPlaylist();
-
-        if (validPlaylist.length > 0 && audioElement) {
-            if (volumeSlider) {
-                audioElement.volume = parseFloat(volumeSlider.value);
-            }
-            loadTrack(currentTrackIndex);
-            setupPlayerEventListeners();
-        } else {
-            if (playerTitle) playerTitle.textContent = "No Audio Found";
-            if (playerArtist) playerArtist.textContent = "Opium";
-        }
+        loadTrack(currentTrackIndex);
+        setupPlayerEventListeners();
     }
 
     function loadTrack(index) {
-        if (!validPlaylist.length || !audioElement) return;
+        if (!validPlaylist[index] || !audioElement) return;
 
         const track = validPlaylist[index];
         audioElement.src = track.src;
         playerTitle.textContent = track.title;
-        playerArtist.textContent = `${track.artist} • ${track.album}`;
+        playerArtist.textContent = track.artist;
         playerCover.src = track.cover;
         progressSlider.value = 0;
         currentTimeEl.textContent = "0:00";
@@ -294,12 +181,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function togglePlayPause() {
-        if (!validPlaylist.length) return;
+        if (!audioElement.src) return;
 
         if (isPlaying) {
             audioElement.pause();
         } else {
-            audioElement.play().catch(err => console.log('Playback error:', err));
+            audioElement.play().catch(err => console.log('Playback starting:', err));
         }
     }
 
@@ -317,14 +204,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function prevTrack() {
-        if (!validPlaylist.length) return;
         currentTrackIndex = (currentTrackIndex - 1 + validPlaylist.length) % validPlaylist.length;
         loadTrack(currentTrackIndex);
         if (isPlaying) audioElement.play();
     }
 
     function nextTrack() {
-        if (!validPlaylist.length) return;
         currentTrackIndex = (currentTrackIndex + 1) % validPlaylist.length;
         loadTrack(currentTrackIndex);
         if (isPlaying) audioElement.play();
@@ -370,20 +255,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     initMusicPlayer();
-
-    // 7. Context Handlers (Allowing Standard Interactive Elements)
-    document.addEventListener('contextmenu', (e) => {
-        if (e.target.closest('input, textarea, iframe')) return;
-        e.preventDefault();
-    });
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'F12') { e.preventDefault(); return; }
-        if (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) {
-            e.preventDefault(); return;
-        }
-        if (e.ctrlKey && e.key.toUpperCase() === 'U') {
-            e.preventDefault(); return;
-        }
-    });
 });
