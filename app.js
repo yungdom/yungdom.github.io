@@ -1,5 +1,39 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Theme Toggle Logic
+    // 1. Security & Protection (Prevent Selection, Dragging, Context Menu & DevTools)
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+    document.addEventListener('dragstart', (e) => e.preventDefault());
+    document.addEventListener('selectstart', (e) => e.preventDefault());
+
+    document.addEventListener('keydown', (e) => {
+        // Block F12
+        if (e.key === 'F12' || e.keyCode === 123) {
+            e.preventDefault();
+            return false;
+        }
+
+        const isControl = e.ctrlKey || e.metaKey;
+
+        if (isControl) {
+            const keyLower = e.key.toLowerCase();
+            // Block Ctrl+Shift+I / J / C (DevTools & Inspect Element)
+            if (e.shiftKey && (keyLower === 'i' || keyLower === 'j' || keyLower === 'c')) {
+                e.preventDefault();
+                return false;
+            }
+            // Block Ctrl+U (View Source)
+            if (keyLower === 'u') {
+                e.preventDefault();
+                return false;
+            }
+            // Block Ctrl+S (Save Page)
+            if (keyLower === 's') {
+                e.preventDefault();
+                return false;
+            }
+        }
+    });
+
+    // 2. Theme Toggle Logic
     const themeToggleBtn = document.getElementById('themeToggle');
     const savedTheme = localStorage.getItem('theme');
     const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
@@ -19,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 2. Mobile Warning Check
+    // 3. Mobile Warning Check
     const isMobile = () => {
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
         const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
@@ -35,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mobileOverlay) mobileOverlay.style.display = 'flex';
     }
 
-    // 3. Copy Button Animation & Clipboard Logic
+    // 4. Copy Button Animation & Clipboard Logic
     const copyBtn = document.getElementById('copyBtn');
     const copyText = document.getElementById('copyText');
     const loadstringText = document.getElementById('loadstringText');
@@ -62,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 4. Smooth FAQ Accordion Animation
+    // 5. Smooth FAQ Accordion Animation
     const faqQuestions = document.querySelectorAll('.faq-question');
     faqQuestions.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -82,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 5. Hero Background Dynamic Parallax Motion
+    // 6. Hero Background Dynamic Parallax Motion
     const heroBg = document.getElementById('heroBg');
     let mouseX = 0, mouseY = 0;
     let targetX = 0, targetY = 0;
@@ -103,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     renderDynamicMotion();
 
-    // 6. Dynamic Embedded Metadata Extraction & Embedded Track ID Sorting
+    // 7. Dynamic Embedded Metadata Extraction & Embedded Track ID Sorting
     const MUSIC_BASE_URL = 'https://getopium.cc/music/';
     
     const FILE_NAMES = [
@@ -161,11 +195,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 onSuccess: (tag) => {
                     const tags = tag.tags;
                     
-                    // Parse embedded album track number (e.g. "3" or "03/12")
                     let rawTrack = tags.track ? String(tags.track.data || tags.track) : null;
                     let embeddedTrackId = rawTrack ? parseInt(rawTrack.split('/')[0], 10) : (index + 1);
 
-                    // Extract embedded cover art buffer to base64 Data URL
                     let coverUrl = 'artwork/opium.png';
                     if (tags.picture) {
                         const { data, format } = tags.picture;
@@ -207,11 +239,9 @@ document.addEventListener('DOMContentLoaded', () => {
     async function initMusicPlayer() {
         if (!audioElement) return;
 
-        // Load metadata concurrently for all audio files
         const metadataPromises = FILE_NAMES.map((file, idx) => fetchEmbeddedMetadata(file, idx));
         const tracks = await Promise.all(metadataPromises);
 
-        // Sort queue strictly by EMBEDDED Track ID
         validPlaylist = tracks.sort((a, b) => a.id - b.id);
 
         if (!validPlaylist.length) return;
