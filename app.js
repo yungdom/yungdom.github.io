@@ -123,12 +123,130 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderDynamicMotion();
 
-    // 6. Context Security Handlers
+    // 6. Sticky Floating Music Player Engine
+    const audioFilesCatalog = [
+        { title: "FE!N", artist: "Travis Scott ft. Playboi Carti", src: "artwork/fein.flac", cover: "artwork/opium.png" },
+        { title: "Stop Breathing", artist: "Playboi Carti", src: "artwork/stop_breathing.mp3", cover: "artwork/opium2.png" },
+        { title: "No Bystanders", artist: "Opium Remix", src: "artwork/nobystanders.flac", cover: "artwork/opium3.png" },
+        // Items to be automatically filtered out:
+        { title: "Interface Graphic", artist: "System", src: "artwork/opium.png", cover: "artwork/opium.png" },
+        { title: "Layer Template", artist: "System", src: "artwork/ui_mockup.psd", cover: "artwork/opium.png" }
+    ];
+
+    // Filter engine: Strict inclusion of .mp3 and .flac only
+    const validPlaylist = audioFilesCatalog.filter(file => {
+        const ext = file.src.slice(((file.src.lastIndexOf(".") - 1) >>> 0) + 2).toLowerCase();
+        return ext === 'mp3' || ext === 'flac';
+    });
+
+    let currentTrackIndex = 0;
+    let isPlaying = false;
+
+    const audioElement = document.getElementById('audioEngine');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const playerCover = document.getElementById('playerCover');
+    const playerTitle = document.getElementById('playerTitle');
+    const playerArtist = document.getElementById('playerArtist');
+    const progressSlider = document.getElementById('progressSlider');
+    const currentTimeEl = document.getElementById('currentTime');
+    const durationTimeEl = document.getElementById('durationTime');
+
+    const playIcon = playPauseBtn ? playPauseBtn.querySelector('.play-icon') : null;
+    const pauseIcon = playPauseBtn ? playPauseBtn.querySelector('.pause-icon') : null;
+
+    function loadTrack(index) {
+        if (!validPlaylist.length || !audioElement) return;
+
+        const track = validPlaylist[index];
+        audioElement.src = track.src;
+        playerTitle.textContent = track.title;
+        playerArtist.textContent = track.artist;
+        playerCover.src = track.cover;
+        progressSlider.value = 0;
+        currentTimeEl.textContent = "0:00";
+        durationTimeEl.textContent = "0:00";
+    }
+
+    function togglePlayPause() {
+        if (!validPlaylist.length) return;
+
+        if (isPlaying) {
+            audioElement.pause();
+        } else {
+            audioElement.play().catch(err => console.log('Audio playback prevented:', err));
+        }
+    }
+
+    function updatePlayPauseUI(playing) {
+        isPlaying = playing;
+        if (playing) {
+            if (playIcon) playIcon.style.display = 'none';
+            if (pauseIcon) pauseIcon.style.display = 'block';
+            if (playerCover) playerCover.classList.add('playing');
+        } else {
+            if (playIcon) playIcon.style.display = 'block';
+            if (pauseIcon) pauseIcon.style.display = 'none';
+            if (playerCover) playerCover.classList.remove('playing');
+        }
+    }
+
+    function prevTrack() {
+        if (!validPlaylist.length) return;
+        currentTrackIndex = (currentTrackIndex - 1 + validPlaylist.length) % validPlaylist.length;
+        loadTrack(currentTrackIndex);
+        if (isPlaying) audioElement.play();
+    }
+
+    function nextTrack() {
+        if (!validPlaylist.length) return;
+        currentTrackIndex = (currentTrackIndex + 1) % validPlaylist.length;
+        loadTrack(currentTrackIndex);
+        if (isPlaying) audioElement.play();
+    }
+
+    function formatTime(seconds) {
+        if (isNaN(seconds)) return "0:00";
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    if (validPlaylist.length && audioElement) {
+        loadTrack(currentTrackIndex);
+
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        prevBtn.addEventListener('click', prevTrack);
+        nextBtn.addEventListener('click', nextTrack);
+
+        audioElement.addEventListener('play', () => updatePlayPauseUI(true));
+        audioElement.addEventListener('pause', () => updatePlayPauseUI(false));
+        audioElement.addEventListener('ended', nextTrack);
+
+        audioElement.addEventListener('timeupdate', () => {
+            if (!isNaN(audioElement.duration)) {
+                const progress = (audioElement.currentTime / audioElement.duration) * 100;
+                progressSlider.value = progress;
+                currentTimeEl.textContent = formatTime(audioElement.currentTime);
+                durationTimeEl.textContent = formatTime(audioElement.duration);
+            }
+        });
+
+        progressSlider.addEventListener('input', () => {
+            if (!isNaN(audioElement.duration)) {
+                const targetTime = (progressSlider.value / 100) * audioElement.duration;
+                audioElement.currentTime = targetTime;
+            }
+        });
+    }
+
+    // 7. Context Security Handlers
     document.addEventListener('contextmenu', (e) => e.preventDefault());
     document.addEventListener('selectstart', (e) => e.preventDefault());
     
     document.addEventListener('mousedown', (e) => {
-        if (e.target.closest('a, button, input, select, textarea, #copyBtn, code')) {
+        if (e.target.closest('a, button, input, select, textarea, #copyBtn, code, .sticky-music-player')) {
             return;
         }
         if (e.detail > 0) {
