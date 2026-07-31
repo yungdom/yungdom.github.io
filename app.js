@@ -123,22 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderDynamicMotion();
 
-    // 6. Sticky Floating Music Player Engine
-    const audioFilesCatalog = [
-        { title: "FE!N", artist: "Travis Scott ft. Playboi Carti", src: "artwork/fein.flac", cover: "artwork/opium.png" },
-        { title: "Stop Breathing", artist: "Playboi Carti", src: "artwork/stop_breathing.mp3", cover: "artwork/opium2.png" },
-        { title: "No Bystanders", artist: "Opium Remix", src: "artwork/nobystanders.flac", cover: "artwork/opium3.png" },
-        // Items to be automatically filtered out:
-        { title: "Interface Graphic", artist: "System", src: "artwork/opium.png", cover: "artwork/opium.png" },
-        { title: "Layer Template", artist: "System", src: "artwork/ui_mockup.psd", cover: "artwork/opium.png" }
-    ];
-
-    // Filter engine: Strict inclusion of .mp3 and .flac only
-    const validPlaylist = audioFilesCatalog.filter(file => {
-        const ext = file.src.slice(((file.src.lastIndexOf(".") - 1) >>> 0) + 2).toLowerCase();
-        return ext === 'mp3' || ext === 'flac';
-    });
-
+    // 6. Dynamic Music Player Engine (Loads directly from music/ folder)
+    let validPlaylist = [];
     let currentTrackIndex = 0;
     let isPlaying = false;
 
@@ -155,6 +141,61 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const playIcon = playPauseBtn ? playPauseBtn.querySelector('.play-icon') : null;
     const pauseIcon = playPauseBtn ? playPauseBtn.querySelector('.pause-icon') : null;
+
+    async function fetchMusicPlaylist() {
+        try {
+            // Option A: Fetch tracks manifest dynamically from music/playlist.json
+            const jsonRes = await fetch('music/playlist.json');
+            if (jsonRes.ok) {
+                const data = await jsonRes.json();
+                return data.map(item => ({
+                    title: item.title || item.file.replace(/\.[^/.]+$/, ""),
+                    artist: item.artist || "Unknown Artist",
+                    src: `music/${item.file}`,
+                    cover: item.cover ? `artwork/${item.cover}` : 'artwork/opium.png'
+                }));
+            }
+
+            // Option B: Fallback - Attempt directory index parsing from web server
+            const dirRes = await fetch('music/');
+            if (dirRes.ok) {
+                const text = await dirRes.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+                const links = Array.from(doc.querySelectorAll('a'));
+                
+                const audioFiles = links
+                    .map(a => a.getAttribute('href'))
+                    .filter(href => href && (href.toLowerCase().endsWith('.mp3') || href.toLowerCase().endsWith('.flac')));
+
+                return audioFiles.map(file => {
+                    const fileName = decodeURIComponent(file.split('/').pop());
+                    const cleanName = fileName.replace(/\.[^/.]+$/, "");
+                    return {
+                        title: cleanName,
+                        artist: "Opium",
+                        src: file.startsWith('music/') ? file : `music/${fileName}`,
+                        cover: "artwork/opium.png"
+                    };
+                });
+            }
+        } catch (err) {
+            console.warn('Dynamic audio directory fetch failed:', err);
+        }
+        return [];
+    }
+
+    async function initMusicPlayer() {
+        validPlaylist = await fetchMusicPlaylist();
+
+        if (validPlaylist.length > 0 && audioElement) {
+            loadTrack(currentTrackIndex);
+            setupPlayerEventListeners();
+        } else {
+            if (playerTitle) playerTitle.textContent = "No Track Loaded";
+            if (playerArtist) playerArtist.textContent = "Add files to music/";
+        }
+    }
 
     function loadTrack(index) {
         if (!validPlaylist.length || !audioElement) return;
@@ -175,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isPlaying) {
             audioElement.pause();
         } else {
-            audioElement.play().catch(err => console.log('Audio playback prevented:', err));
+            audioElement.play().catch(err => console.log('Audio playback error:', err));
         }
     }
 
@@ -213,9 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
 
-    if (validPlaylist.length && audioElement) {
-        loadTrack(currentTrackIndex);
-
+    function setupPlayerEventListeners() {
         playPauseBtn.addEventListener('click', togglePlayPause);
         prevBtn.addEventListener('click', prevTrack);
         nextBtn.addEventListener('click', nextTrack);
@@ -240,6 +279,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    initMusicPlayer();
 
     // 7. Context Security Handlers
     document.addEventListener('contextmenu', (e) => e.preventDefault());
