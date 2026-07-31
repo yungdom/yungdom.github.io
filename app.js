@@ -1,5 +1,26 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Mobile Detection Logic
+    // 1. Theme Toggle Logic
+    const themeToggleBtn = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+
+    if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    } else if (systemPrefersLight) {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    }
+
+    // 2. Mobile Detection Logic
     const isMobile = () => {
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
         const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
@@ -15,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mobileOverlay) mobileOverlay.style.display = 'flex';
     }
 
-    // 2. Interactive Loadstring Copy Logic
+    // 3. Interactive Loadstring Copy Logic
     const copyBtn = document.getElementById('copyBtn');
     const copyText = document.getElementById('copyText');
     const loadstringText = document.getElementById('loadstringText');
@@ -50,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. Dynamic Accordion Logic
+    // 4. Dynamic Accordion Logic
     const faqQuestions = document.querySelectorAll('.faq-question');
     faqQuestions.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -70,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 4. Organic Mouse Tilt/Parallax Interaction
+    // 5. Organic Mouse Tilt/Parallax Interaction
     const featureCards = document.querySelectorAll('.feature-card');
     const heroBg = document.getElementById('heroBg');
 
@@ -102,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderDynamicMotion();
 
-    // 5. Context Security Handlers
+    // 6. Context Security Handlers
     document.addEventListener('contextmenu', (e) => e.preventDefault());
     document.addEventListener('selectstart', (e) => e.preventDefault());
     
