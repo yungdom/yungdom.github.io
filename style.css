@@ -194,7 +194,6 @@ html, body {
     -webkit-text-fill-color: transparent;
 }
 
-/* Forced Single-Line Hero Subtitle */
 .hero-subtitle {
     font-size: 18px;
     color: var(--text-secondary);
@@ -268,7 +267,7 @@ html, body {
 .responsive-video {
     position: relative;
     width: 100%;
-    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    padding-bottom: 56.25%;
     height: 0;
     overflow: hidden;
     border-radius: 12px;
@@ -313,7 +312,7 @@ html, body {
     gap: 16px;
 }
 
-/* Prism CSS Overrides for Clean Textbox Styling */
+/* Prism CSS Overrides for Textbox */
 .loadstring-pre, 
 .loadstring-bar pre, 
 .loadstring-bar code,
@@ -362,7 +361,7 @@ code[class*="language-"] {
     color: var(--text-secondary);
 }
 
-/* FAQ Accordion & Smooth Animations */
+/* FAQ Accordion */
 .faq-section {
     padding: 60px 20px;
 }
@@ -425,7 +424,7 @@ code[class*="language-"] {
     line-height: 1.6;
 }
 
-/* CTA Neon Section - Forced Single Line Text */
+/* CTA Neon Section - Single Line Text */
 .cta-neon-section {
     padding: 80px 20px;
     text-align: center;
@@ -446,8 +445,7 @@ code[class*="language-"] {
     text-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
 }
 
-/* Footer */
-/* Footer Glass Bar */
+/* Footer Glass Bar with Bracketed Logo */
 .footer {
     padding: 20px 20px 100px 20px;
     display: flex;
@@ -469,7 +467,21 @@ code[class*="language-"] {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 14px;
+    gap: 12px;
+}
+
+.logo-bracket-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.logo-bracket {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    user-select: none;
+    line-height: 1;
 }
 
 .footer-logo {
@@ -488,7 +500,7 @@ code[class*="language-"] {
     line-height: 1;
 }
 
-/* Compact Floating Music Player */
+/* Floating Music Player */
 .sticky-music-player {
     position: fixed;
     bottom: 16px;
@@ -578,7 +590,6 @@ code[class*="language-"] {
     min-width: 24px;
 }
 
-/* Sliders */
 .player-slider {
     flex: 1;
     height: 4px;
@@ -649,7 +660,6 @@ code[class*="language-"] {
     opacity: 0.9;
 }
 
-/* Volume Control */
 .player-volume-container {
     display: flex;
     align-items: center;
