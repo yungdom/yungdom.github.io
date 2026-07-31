@@ -447,13 +447,19 @@ code[class*="language-"] {
 }
 
 /* Footer */
+/* Footer Glass Bar */
 .footer {
-    padding: 40px 20px 100px 20px;
+    padding: 20px 20px 100px 20px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }
 
 .footer-container {
+    width: 100%;
     max-width: 1100px;
-    margin: 0 auto;
+    padding: 16px 28px;
+    border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -462,17 +468,24 @@ code[class*="language-"] {
 .footer-brand {
     display: flex;
     align-items: center;
-    gap: 16px;
+    justify-content: center;
+    gap: 14px;
 }
 
 .footer-logo {
-    height: 24px;
+    height: 22px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 4px;
 }
 
 .disclaimer-text {
-    font-size: 12px;
-    color: var(--text-secondary);
+    font-size: 13px;
     font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: -0.2px;
+    margin: 0;
+    line-height: 1;
 }
 
 /* Compact Floating Music Player */
