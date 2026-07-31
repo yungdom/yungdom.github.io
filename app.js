@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 5. Organic Mouse Tilt/Parallax Interaction
+    // 5. Aero Interactive Mouse Parallax
     const featureCards = document.querySelectorAll('.feature-card');
     const heroBg = document.getElementById('heroBg');
 
