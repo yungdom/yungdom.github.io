@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 2. Mobile Detection Logic
+    // 2. Mobile Warning Check
     const isMobile = () => {
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
         const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 5. Parallax Motion
+    // 5. Hero Background Dynamic Parallax Motion
     const heroBg = document.getElementById('heroBg');
     let mouseX = 0, mouseY = 0;
     let targetX = 0, targetY = 0;
@@ -103,44 +103,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     renderDynamicMotion();
 
-    // 6. Track ID Sorted Music Player
+    // 6. Dynamic Embedded Metadata Extraction & Embedded Track ID Sorting
     const MUSIC_BASE_URL = 'https://getopium.cc/music/';
     
-    // Assigned Track IDs for exact queue sorting
-    const TRACK_LIST = [
-        { id: 1,  file: "Busy.flac", title: "Busy" },
-        { id: 2,  file: "Shisha (Bass Boosted).mp3", title: "Shisha (Bass Boosted)" },
-        { id: 3,  file: "Cayenne.flac", title: "Cayenne" },
-        { id: 4,  file: "Sosa.mp3", title: "Sosa" },
-        { id: 5,  file: "Chill & Adrenalina.mp3", title: "Chill & Adrenalina" },
-        { id: 6,  file: "Dior.mp3", title: "Dior" },
-        { id: 7,  file: "Kartell.flac", title: "Kartell" },
-        { id: 8,  file: "C'est la Rue.mp3", title: "C'est la Rue" },
-        { id: 9,  file: "Patron.mp3", title: "Patron" },
-        { id: 10, file: "Plata.mp3", title: "Plata" },
-        { id: 11, file: "Pharmacia Provino.mp3", title: "Pharmacia Provino" },
-        { id: 12, file: "LV.mp3", title: "LV" },
-        { id: 13, file: "Outro.flac", title: "Outro" },
-        { id: 14, file: "Dolce Vita.flac", title: "Dolce Vita" },
-        { id: 15, file: "Loyalty Means Everything.mp3", title: "Loyalty Means Everything" },
-        { id: 16, file: "Mon bébé.mp3", title: "Mon bébé" },
-        { id: 17, file: "Monnalisa.flac", title: "Monnalisa" },
-        { id: 18, file: "Mon chéri.flac", title: "Mon chéri" },
-        { id: 19, file: "Bandolero.mp3", title: "Bandolero" },
-        { id: 20, file: "Africa Twin.mp3", title: "Africa Twin" }
+    const FILE_NAMES = [
+        "Busy.flac",
+        "Shisha (Bass Boosted).mp3",
+        "Cayenne.flac",
+        "Sosa.mp3",
+        "Chill & Adrenalina.mp3",
+        "Dior.mp3",
+        "Kartell.flac",
+        "C'est la Rue.mp3",
+        "Patron.mp3",
+        "Plata.mp3",
+        "Pharmacia Provino.mp3",
+        "LV.mp3",
+        "Outro.flac",
+        "Dolce Vita.flac",
+        "Loyalty Means Everything.mp3",
+        "Mon bébé.mp3",
+        "Monnalisa.flac",
+        "Mon chéri.flac",
+        "Bandolero.mp3",
+        "Africa Twin.mp3"
     ];
 
-    // Sort Queue strictly by Track ID (Ascending: 1, 2, 3...)
-    const validPlaylist = TRACK_LIST
-        .sort((a, b) => a.id - b.id)
-        .map(track => ({
-            id: track.id,
-            title: `#${track.id} - ${track.title}`,
-            artist: "Opium",
-            src: `${MUSIC_BASE_URL}${encodeURIComponent(track.file)}`,
-            cover: "artwork/opium.png"
-        }));
-
+    let validPlaylist = [];
     let currentTrackIndex = 0;
     let isPlaying = false;
 
@@ -159,12 +148,78 @@ document.addEventListener('DOMContentLoaded', () => {
     const playIcon = playPauseBtn ? playPauseBtn.querySelector('.play-icon') : null;
     const pauseIcon = playPauseBtn ? playPauseBtn.querySelector('.pause-icon') : null;
 
-    function initMusicPlayer() {
-        if (!validPlaylist.length || !audioElement) return;
+    // Helper: Parse embedded ID3/FLAC metadata via jsmediatags
+    function fetchEmbeddedMetadata(fileName, index) {
+        const fileUrl = `${MUSIC_BASE_URL}${encodeURIComponent(fileName)}`;
+        return new Promise((resolve) => {
+            if (!window.jsmediatags) {
+                resolve(getFallbackTrackData(fileName, fileUrl, index));
+                return;
+            }
+
+            window.jsmediatags.read(fileUrl, {
+                onSuccess: (tag) => {
+                    const tags = tag.tags;
+                    
+                    // Parse embedded album track number (e.g. "3" or "03/12")
+                    let rawTrack = tags.track ? String(tags.track.data || tags.track) : null;
+                    let embeddedTrackId = rawTrack ? parseInt(rawTrack.split('/')[0], 10) : (index + 1);
+
+                    // Extract embedded cover art buffer to base64 Data URL
+                    let coverUrl = 'artwork/opium.png';
+                    if (tags.picture) {
+                        const { data, format } = tags.picture;
+                        let base64String = "";
+                        for (let i = 0; i < data.length; i++) {
+                            base64String += String.fromCharCode(data[i]);
+                        }
+                        coverUrl = `data:${format};base64,${window.btoa(base64String)}`;
+                    }
+
+                    const cleanTitle = tags.title || fileName.replace(/\.[^/.]+$/, "");
+                    const artist = tags.artist || "Opium";
+
+                    resolve({
+                        id: embeddedTrackId,
+                        title: cleanTitle,
+                        artist: artist,
+                        src: fileUrl,
+                        cover: coverUrl
+                    });
+                },
+                onError: () => {
+                    resolve(getFallbackTrackData(fileName, fileUrl, index));
+                }
+            });
+        });
+    }
+
+    function getFallbackTrackData(fileName, fileUrl, index) {
+        return {
+            id: index + 1,
+            title: decodeURIComponent(fileName.replace(/\.[^/.]+$/, "")),
+            artist: "Opium",
+            src: fileUrl,
+            cover: "artwork/opium.png"
+        };
+    }
+
+    async function initMusicPlayer() {
+        if (!audioElement) return;
+
+        // Load metadata concurrently for all audio files
+        const metadataPromises = FILE_NAMES.map((file, idx) => fetchEmbeddedMetadata(file, idx));
+        const tracks = await Promise.all(metadataPromises);
+
+        // Sort queue strictly by EMBEDDED Track ID
+        validPlaylist = tracks.sort((a, b) => a.id - b.id);
+
+        if (!validPlaylist.length) return;
 
         if (volumeSlider) {
             audioElement.volume = parseFloat(volumeSlider.value);
         }
+
         loadTrack(currentTrackIndex);
         setupPlayerEventListeners();
     }
@@ -176,7 +231,14 @@ document.addEventListener('DOMContentLoaded', () => {
         audioElement.src = track.src;
         playerTitle.textContent = track.title;
         playerArtist.textContent = track.artist;
-        playerCover.src = track.cover;
+        
+        if (playerCover) {
+            playerCover.src = track.cover;
+            playerCover.onerror = () => {
+                playerCover.src = 'artwork/opium.png';
+            };
+        }
+
         progressSlider.value = 0;
         currentTimeEl.textContent = "0:00";
         durationTimeEl.textContent = "0:00";
@@ -225,9 +287,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setupPlayerEventListeners() {
-        playPauseBtn.addEventListener('click', togglePlayPause);
-        prevBtn.addEventListener('click', prevTrack);
-        nextBtn.addEventListener('click', nextTrack);
+        if (playPauseBtn) playPauseBtn.addEventListener('click', togglePlayPause);
+        if (prevBtn) prevBtn.addEventListener('click', prevTrack);
+        if (nextBtn) nextBtn.addEventListener('click', nextTrack);
 
         if (volumeSlider) {
             volumeSlider.addEventListener('input', (e) => {
@@ -248,12 +310,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        progressSlider.addEventListener('input', () => {
-            if (!isNaN(audioElement.duration)) {
-                const targetTime = (progressSlider.value / 100) * audioElement.duration;
-                audioElement.currentTime = targetTime;
-            }
-        });
+        if (progressSlider) {
+            progressSlider.addEventListener('input', () => {
+                if (!isNaN(audioElement.duration)) {
+                    const targetTime = (progressSlider.value / 100) * audioElement.duration;
+                    audioElement.currentTime = targetTime;
+                }
+            });
+        }
     }
 
     initMusicPlayer();
