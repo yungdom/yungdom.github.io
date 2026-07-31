@@ -1,39 +1,30 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Security & Protection (Prevent Selection, Dragging, Context Menu & DevTools)
+    // 1. Security & Lock Interactions (Prevent Context Menu, Dragging, Select & DevTools)
     document.addEventListener('contextmenu', (e) => e.preventDefault());
     document.addEventListener('dragstart', (e) => e.preventDefault());
     document.addEventListener('selectstart', (e) => e.preventDefault());
 
     document.addEventListener('keydown', (e) => {
-        // Block F12
         if (e.key === 'F12' || e.keyCode === 123) {
             e.preventDefault();
             return false;
         }
 
         const isControl = e.ctrlKey || e.metaKey;
-
         if (isControl) {
             const keyLower = e.key.toLowerCase();
-            // Block Ctrl+Shift+I / J / C (DevTools & Inspect Element)
             if (e.shiftKey && (keyLower === 'i' || keyLower === 'j' || keyLower === 'c')) {
                 e.preventDefault();
                 return false;
             }
-            // Block Ctrl+U (View Source)
-            if (keyLower === 'u') {
-                e.preventDefault();
-                return false;
-            }
-            // Block Ctrl+S (Save Page)
-            if (keyLower === 's') {
+            if (keyLower === 'u' || keyLower === 's') {
                 e.preventDefault();
                 return false;
             }
         }
     });
 
-    // 2. Theme Toggle Logic
+    // 2. Smooth Theme Toggle Handler
     const themeToggleBtn = document.getElementById('themeToggle');
     const savedTheme = localStorage.getItem('theme');
     const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
@@ -53,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. Mobile Warning Check
+    // 3. Mobile Device Guard
     const isMobile = () => {
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
         const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
@@ -69,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mobileOverlay) mobileOverlay.style.display = 'flex';
     }
 
-    // 4. Copy Button Animation & Clipboard Logic
+    // 4. Instant Execution Copy Button Animation & Clipboard Logic
     const copyBtn = document.getElementById('copyBtn');
     const copyText = document.getElementById('copyText');
     const loadstringText = document.getElementById('loadstringText');
@@ -96,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 5. Smooth FAQ Accordion Animation
+    // 5. FAQ Accordion Handler
     const faqQuestions = document.querySelectorAll('.faq-question');
     faqQuestions.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -116,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 6. Hero Background Dynamic Parallax Motion
+    // 6. Smooth Mouse Parallax Motion for Hero Ambient Backdrop
     const heroBg = document.getElementById('heroBg');
     let mouseX = 0, mouseY = 0;
     let targetX = 0, targetY = 0;
@@ -127,23 +118,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function renderDynamicMotion() {
-        targetX += (mouseX - targetX) * 0.04;
-        targetY += (mouseY - targetY) * 0.04;
+        targetX += (mouseX - targetX) * 0.03;
+        targetY += (mouseY - targetY) * 0.03;
 
         if (heroBg) {
-            heroBg.style.transform = `translate(calc(-50% + ${targetX * 0.03}px), calc(-50% + ${targetY * 0.03}px))`;
+            heroBg.style.transform = `translate(calc(-50% + ${targetX * 0.02}px), calc(-50% + ${targetY * 0.02}px))`;
         }
         requestAnimationFrame(renderDynamicMotion);
     }
     renderDynamicMotion();
 
-    // 7. Dynamic Embedded Metadata Extraction & Embedded Track ID Sorting
+    // 7. Dynamic Embedded Metadata Extraction & Track Identification
     const MUSIC_BASE_URL = 'https://getopium.cc/music/';
     
     const FILE_NAMES = [
-        "Loyalty Means Everything.mp3",
         "Busy.flac",
-        "Shisha.mp3",
+        "Shisha (Bass Boosted).mp3",
         "Cayenne.flac",
         "Sosa.mp3",
         "Chill & Adrenalina.mp3",
@@ -156,6 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "LV.mp3",
         "Outro.flac",
         "Dolce Vita.flac",
+        "Loyalty Means Everything.mp3",
         "Mon bébé.mp3",
         "Monnalisa.flac",
         "Mon chéri.flac",
@@ -182,7 +173,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const playIcon = playPauseBtn ? playPauseBtn.querySelector('.play-icon') : null;
     const pauseIcon = playPauseBtn ? playPauseBtn.querySelector('.pause-icon') : null;
 
-    // Helper: Parse embedded ID3/FLAC metadata via jsmediatags
     function fetchEmbeddedMetadata(fileName, index) {
         const fileUrl = `${MUSIC_BASE_URL}${encodeURIComponent(fileName)}`;
         return new Promise((resolve) => {
@@ -194,7 +184,6 @@ document.addEventListener('DOMContentLoaded', () => {
             window.jsmediatags.read(fileUrl, {
                 onSuccess: (tag) => {
                     const tags = tag.tags;
-                    
                     let rawTrack = tags.track ? String(tags.track.data || tags.track) : null;
                     let embeddedTrackId = rawTrack ? parseInt(rawTrack.split('/')[0], 10) : (index + 1);
 
