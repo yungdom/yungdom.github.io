@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderDynamicMotion();
 
-    // 6. Dynamic Music Player Engine (Loads directly from music/ folder)
+    // 6. Dynamic Embedded Metadata Extraction Engine
     let validPlaylist = [];
     let currentTrackIndex = 0;
     let isPlaying = false;
@@ -142,21 +142,55 @@ document.addEventListener('DOMContentLoaded', () => {
     const playIcon = playPauseBtn ? playPauseBtn.querySelector('.play-icon') : null;
     const pauseIcon = playPauseBtn ? playPauseBtn.querySelector('.pause-icon') : null;
 
-    async function fetchMusicPlaylist() {
-        try {
-            // Option A: Fetch tracks manifest dynamically from music/playlist.json
-            const jsonRes = await fetch('music/playlist.json');
-            if (jsonRes.ok) {
-                const data = await jsonRes.json();
-                return data.map(item => ({
-                    title: item.title || item.file.replace(/\.[^/.]+$/, ""),
-                    artist: item.artist || "Unknown Artist",
-                    src: `music/${item.file}`,
-                    cover: item.cover ? `artwork/${item.cover}` : 'artwork/opium.png'
-                }));
+    // Helper: Parse embedded ID3/Vorbis tags and artwork from FLAC / MP3 file buffer
+    function parseEmbeddedAudioMetadata(filePath) {
+        return new Promise((resolve) => {
+            const fallbackTitle = filePath.split('/').pop().replace(/\.[^/.]+$/, "");
+            
+            if (typeof jsmediatags === 'undefined') {
+                resolve({
+                    title: fallbackTitle,
+                    artist: "Unknown Artist",
+                    src: filePath,
+                    cover: "artwork/opium.png"
+                });
+                return;
             }
 
-            // Option B: Fallback - Attempt directory index parsing from web server
+            jsmediatags.read(filePath, {
+                onSuccess: function(tag) {
+                    const tags = tag.tags || {};
+                    const title = tags.title ? tags.title.trim() : fallbackTitle;
+                    const artist = tags.artist ? tags.artist.trim() : "Opium";
+                    let cover = "artwork/opium.png";
+
+                    // Extract embedded APIC / METADATA_BLOCK_PICTURE artwork block
+                    if (tags.picture) {
+                        const { data, format } = tags.picture;
+                        let base64String = "";
+                        for (let i = 0; i < data.length; i++) {
+                            base64String += String.fromCharCode(data[i]);
+                        }
+                        cover = `data:${format};base64,${window.btoa(base64String)}`;
+                    }
+
+                    resolve({ title, artist, src: filePath, cover });
+                },
+                onError: function() {
+                    resolve({
+                        title: fallbackTitle,
+                        artist: "Opium",
+                        src: filePath,
+                        cover: "artwork/opium.png"
+                    });
+                }
+            });
+        });
+    }
+
+    async function fetchMusicPlaylist() {
+        let audioPaths = [];
+        try {
             const dirRes = await fetch('music/');
             if (dirRes.ok) {
                 const text = await dirRes.text();
@@ -164,25 +198,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 const doc = parser.parseFromString(text, 'text/html');
                 const links = Array.from(doc.querySelectorAll('a'));
                 
-                const audioFiles = links
+                audioPaths = links
                     .map(a => a.getAttribute('href'))
-                    .filter(href => href && (href.toLowerCase().endsWith('.mp3') || href.toLowerCase().endsWith('.flac')));
-
-                return audioFiles.map(file => {
-                    const fileName = decodeURIComponent(file.split('/').pop());
-                    const cleanName = fileName.replace(/\.[^/.]+$/, "");
-                    return {
-                        title: cleanName,
-                        artist: "Opium",
-                        src: file.startsWith('music/') ? file : `music/${fileName}`,
-                        cover: "artwork/opium.png"
-                    };
-                });
+                    .filter(href => href && (href.toLowerCase().endsWith('.mp3') || href.toLowerCase().endsWith('.flac')))
+                    .map(href => {
+                        const fileName = decodeURIComponent(href.split('/').pop());
+                        return href.startsWith('music/') ? href : `music/${fileName}`;
+                    });
             }
         } catch (err) {
-            console.warn('Dynamic audio directory fetch failed:', err);
+            console.warn('Directory listing fetch failed. Ensure files exist in music/', err);
         }
-        return [];
+
+        // Parse embedded ID3 / Vorbis tags and cover art from each file
+        const parsedPlaylist = await Promise.all(audioPaths.map(path => parseEmbeddedAudioMetadata(path)));
+        return parsedPlaylist;
     }
 
     async function initMusicPlayer() {
@@ -192,8 +222,8 @@ document.addEventListener('DOMContentLoaded', () => {
             loadTrack(currentTrackIndex);
             setupPlayerEventListeners();
         } else {
-            if (playerTitle) playerTitle.textContent = "No Track Loaded";
-            if (playerArtist) playerArtist.textContent = "Add files to music/";
+            if (playerTitle) playerTitle.textContent = "No Audio Found";
+            if (playerArtist) playerArtist.textContent = "Place .mp3/.flac in music/";
         }
     }
 
