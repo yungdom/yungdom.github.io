@@ -123,8 +123,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderDynamicMotion();
 
-    // 6. Embedded Music Player & Universal Folder Metadata Extraction
+    // 6. Compact Music Player & Album-Sorted Track Manager
     const MUSIC_BASE_URL = 'https://getopium.cc/music/';
+    
+    // Explicit Fallback List (Guarantees ALL 20 songs load properly)
+    const RAW_FILES = [
+        "Busy.flac",
+        "Shisha (Bass Boosted).mp3",
+        "Cayenne.flac",
+        "Sosa.mp3",
+        "Chill & Adrenalina.mp3",
+        "Dior.mp3",
+        "Kartell.flac",
+        "C'est la Rue.mp3",
+        "Patron.mp3",
+        "Plata.mp3",
+        "Pharmacia Provino.mp3",
+        "LV.mp3",
+        "Outro.flac",
+        "Dolce Vita.flac",
+        "Loyalty Means Everything.mp3",
+        "Mon bébé.mp3",
+        "Monnalisa.flac",
+        "Mon chéri.flac",
+        "Bandolero.mp3",
+        "Africa Twin.mp3"
+    ];
+
     let validPlaylist = [];
     let currentTrackIndex = 0;
     let isPlaying = false;
@@ -153,6 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 resolve({
                     title: fallbackTitle,
                     artist: "Opium",
+                    album: "Opium Collection",
                     src: filePath,
                     cover: "artwork/opium.png"
                 });
@@ -164,6 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const tags = tag.tags || {};
                     const title = tags.title ? tags.title.trim() : fallbackTitle;
                     const artist = tags.artist ? tags.artist.trim() : "Opium";
+                    const album = tags.album ? tags.album.trim() : "Opium Collection";
                     let cover = "artwork/opium.png";
 
                     if (tags.picture) {
@@ -175,12 +202,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         cover = `data:${format};base64,${window.btoa(base64String)}`;
                     }
 
-                    resolve({ title, artist, src: filePath, cover });
+                    resolve({ title, artist, album, src: filePath, cover });
                 },
                 onError: function() {
                     resolve({
                         title: fallbackTitle,
                         artist: "Opium",
+                        album: "Opium Collection",
                         src: filePath,
                         cover: "artwork/opium.png"
                     });
@@ -190,7 +218,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function fetchMusicPlaylist() {
-        let audioPaths = [];
+        let audioPaths = RAW_FILES.map(file => `${MUSIC_BASE_URL}${file}`);
+
         try {
             const dirRes = await fetch(MUSIC_BASE_URL, { cache: 'no-cache' });
             if (dirRes.ok) {
@@ -199,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const doc = parser.parseFromString(text, 'text/html');
                 const links = Array.from(doc.querySelectorAll('a'));
 
-                audioPaths = links
+                const fetchedPaths = links
                     .map(a => a.getAttribute('href'))
                     .filter(Boolean)
                     .map(href => {
@@ -214,18 +243,27 @@ document.addEventListener('DOMContentLoaded', () => {
                         const cleanPath = fullUrl.split('?')[0].toLowerCase();
                         return cleanPath.endsWith('.mp3') || cleanPath.endsWith('.flac');
                     });
+
+                if (fetchedPaths.length > 0) {
+                    audioPaths = [...audioPaths, ...fetchedPaths];
+                }
             }
         } catch (err) {
-            console.warn('Unable to auto-index remote music folder:', err);
+            console.warn('Folder auto-scan restricted. Loading full hardcoded tracks:', err);
         }
 
         audioPaths = [...new Set(audioPaths)];
 
-        if (audioPaths.length === 0) {
-            audioPaths = [`${MUSIC_BASE_URL}Plata.mp3`];
-        }
-
+        // Parse metadata for all discovered tracks
         const parsedPlaylist = await Promise.all(audioPaths.map(path => parseEmbeddedAudioMetadata(path)));
+        
+        // SORT BY ALBUM (Grouped by album, then alphabetically by title)
+        parsedPlaylist.sort((a, b) => {
+            const albumCompare = a.album.localeCompare(b.album);
+            if (albumCompare !== 0) return albumCompare;
+            return a.title.localeCompare(b.title);
+        });
+
         return parsedPlaylist;
     }
 
@@ -239,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loadTrack(currentTrackIndex);
             setupPlayerEventListeners();
         } else {
-            if (playerTitle) playerTitle.textContent = "No Audio";
+            if (playerTitle) playerTitle.textContent = "No Audio Found";
             if (playerArtist) playerArtist.textContent = "Opium";
         }
     }
@@ -250,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const track = validPlaylist[index];
         audioElement.src = track.src;
         playerTitle.textContent = track.title;
-        playerArtist.textContent = track.artist;
+        playerArtist.textContent = `${track.artist} • ${track.album}`;
         playerCover.src = track.cover;
         progressSlider.value = 0;
         currentTimeEl.textContent = "0:00";
@@ -335,12 +373,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initMusicPlayer();
 
-    // 7. Security Handlers (Allows interactive iframe clicks)
+    // 7. Context Security Handlers (Permitting YouTube & Interactive Embeds)
     document.addEventListener('contextmenu', (e) => e.preventDefault());
     document.addEventListener('selectstart', (e) => e.preventDefault());
     
     document.addEventListener('mousedown', (e) => {
-        // Whitelisted interactive elements so YouTube embed & controls remain clickable
         if (e.target.closest('a, button, input, select, textarea, #copyBtn, code, .sticky-music-player, iframe, .responsive-video')) {
             return;
         }
