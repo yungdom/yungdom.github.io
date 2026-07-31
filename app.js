@@ -141,6 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const MUSIC_BASE_URL = 'https://getopium.cc/music/';
     
     const FILE_NAMES = [
+        "Loyalty Means Everything.mp3",
         "Busy.flac",
         "Shisha.mp3",
         "Cayenne.flac",
@@ -155,7 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
         "LV.mp3",
         "Outro.flac",
         "Dolce Vita.flac",
-        "Loyalty Means Everything.mp3",
         "Mon bébé.mp3",
         "Monnalisa.flac",
         "Mon chéri.flac",
