@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body oncontextmenu="return false;" ondragstart="return false;" onselectstart="return false;">
 
     <div class="mobile-warning-overlay">
         <div class="mobile-warning-box aero-glass">
@@ -181,13 +181,13 @@
         <!-- Compact Floating Music Player -->
         <div class="sticky-music-player aero-glass" id="musicPlayer">
             <div class="player-cover-container">
-                <img src="artwork/opium.png" alt="Song Cover" id="playerCover" class="player-cover">
+                <img src="artwork/opium.png" alt="Song Cover" id="playerCover" class="player-cover" draggable="false">
             </div>
 
             <div class="player-info-section">
                 <div class="player-text-details">
                     <span class="player-song-title" id="playerTitle">Loading Queue...</span>
-                    <span class="player-artist-name" id="playerArtist">Opium</span>
+                    <span class="player-artist-name" id="playerArtist">Opium Music Player</span>
                 </div>
                 <div class="player-progress-bar-wrapper">
                     <span class="time-stamp" id="currentTime">0:00</span>
