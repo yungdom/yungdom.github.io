@@ -182,8 +182,8 @@
             </div>
             <div class="player-info-section">
                 <div class="player-text-details">
-                    <span class="player-song-title" id="playerTitle">Select Song</span>
-                    <span class="player-artist-name" id="playerArtist">Artist</span>
+                    <span class="player-song-title" id="playerTitle">Loading Metadata...</span>
+                    <span class="player-artist-name" id="playerArtist">Reading Tags</span>
                 </div>
                 <div class="player-progress-bar-wrapper">
                     <span class="time-stamp" id="currentTime">0:00</span>
@@ -209,6 +209,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-lua.min.js"></script>
+    <!-- JS Media Tags parser for embedded MP3 ID3 / FLAC Vorbis metadata & artwork extraction -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
