@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderDynamicMotion();
 
-    // 6. Embedded Music Player (Reads MP3/FLAC directly from https://getopium.cc/music/)
+    // 6. Embedded Music Player & Universal Folder Metadata Extraction
     const MUSIC_BASE_URL = 'https://getopium.cc/music/';
     let validPlaylist = [];
     let currentTrackIndex = 0;
@@ -137,6 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const playerTitle = document.getElementById('playerTitle');
     const playerArtist = document.getElementById('playerArtist');
     const progressSlider = document.getElementById('progressSlider');
+    const volumeSlider = document.getElementById('volumeSlider');
     const currentTimeEl = document.getElementById('currentTime');
     const durationTimeEl = document.getElementById('durationTime');
 
@@ -145,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function parseEmbeddedAudioMetadata(filePath) {
         return new Promise((resolve) => {
-            const rawFileName = filePath.split('/').pop();
+            const rawFileName = filePath.split('/').pop().split('?')[0];
             const fallbackTitle = decodeURIComponent(rawFileName.replace(/\.[^/.]+$/, ""));
             
             if (typeof jsmediatags === 'undefined') {
@@ -191,24 +192,31 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchMusicPlaylist() {
         let audioPaths = [];
         try {
-            const dirRes = await fetch(MUSIC_BASE_URL);
+            const dirRes = await fetch(MUSIC_BASE_URL, { cache: 'no-cache' });
             if (dirRes.ok) {
                 const text = await dirRes.text();
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(text, 'text/html');
                 const links = Array.from(doc.querySelectorAll('a'));
-                
+
                 audioPaths = links
                     .map(a => a.getAttribute('href'))
-                    .filter(href => href && (href.toLowerCase().endsWith('.mp3') || href.toLowerCase().endsWith('.flac')))
+                    .filter(Boolean)
                     .map(href => {
-                        if (href.startsWith('http://') || href.startsWith('https://')) return href;
-                        const fileName = href.split('/').pop();
-                        return `${MUSIC_BASE_URL}${fileName}`;
+                        try {
+                            return new URL(href, MUSIC_BASE_URL).href;
+                        } catch {
+                            return null;
+                        }
+                    })
+                    .filter(fullUrl => {
+                        if (!fullUrl) return false;
+                        const cleanPath = fullUrl.split('?')[0].toLowerCase();
+                        return cleanPath.endsWith('.mp3') || cleanPath.endsWith('.flac');
                     });
             }
         } catch (err) {
-            console.warn('Unable to list remote music directory directly:', err);
+            console.warn('Unable to auto-index remote music folder:', err);
         }
 
         audioPaths = [...new Set(audioPaths)];
@@ -225,10 +233,13 @@ document.addEventListener('DOMContentLoaded', () => {
         validPlaylist = await fetchMusicPlaylist();
 
         if (validPlaylist.length > 0 && audioElement) {
+            if (volumeSlider) {
+                audioElement.volume = parseFloat(volumeSlider.value);
+            }
             loadTrack(currentTrackIndex);
             setupPlayerEventListeners();
         } else {
-            if (playerTitle) playerTitle.textContent = "No Tracks Loaded";
+            if (playerTitle) playerTitle.textContent = "No Audio";
             if (playerArtist) playerArtist.textContent = "Opium";
         }
     }
@@ -295,6 +306,12 @@ document.addEventListener('DOMContentLoaded', () => {
         prevBtn.addEventListener('click', prevTrack);
         nextBtn.addEventListener('click', nextTrack);
 
+        if (volumeSlider) {
+            volumeSlider.addEventListener('input', (e) => {
+                audioElement.volume = parseFloat(e.target.value);
+            });
+        }
+
         audioElement.addEventListener('play', () => updatePlayPauseUI(true));
         audioElement.addEventListener('pause', () => updatePlayPauseUI(false));
         audioElement.addEventListener('ended', nextTrack);
@@ -318,12 +335,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initMusicPlayer();
 
-    // 7. Context Security Handlers
+    // 7. Security Handlers (Allows interactive iframe clicks)
     document.addEventListener('contextmenu', (e) => e.preventDefault());
     document.addEventListener('selectstart', (e) => e.preventDefault());
     
     document.addEventListener('mousedown', (e) => {
-        if (e.target.closest('a, button, input, select, textarea, #copyBtn, code, .sticky-music-player')) {
+        // Whitelisted interactive elements so YouTube embed & controls remain clickable
+        if (e.target.closest('a, button, input, select, textarea, #copyBtn, code, .sticky-music-player, iframe, .responsive-video')) {
             return;
         }
         if (e.detail > 0) {
