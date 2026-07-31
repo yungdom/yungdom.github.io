@@ -81,10 +81,11 @@
                     <div class="showcase-card video-card aero-glass">
                         <div class="responsive-video">
                             <iframe 
-                                src="https://www.youtube-nocookie.com/embed/jHArVX-C5DU" 
+                                src="https://www.youtube-nocookie.com/embed/jHArVX-C5DU?enablejsapi=1&rel=0" 
                                 title="Opium Showcase" 
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                                allowfullscreen>
+                                allowfullscreen
+                                loading="lazy">
                             </iframe>
                         </div>
                     </div>
@@ -95,7 +96,7 @@
         <section id="download" class="download-section">
             <div class="section-container">
                 <div class="download-box aero-glass">
-                    <h2 class="gradient-text">Instant Execution</h2>
+                    <h2 class="gradient-text">Try It or Lose It</h2>
                     <p>Copy and execute the loader string below within your supported environment.</p>
                     
                     <div class="loadstring-container">
@@ -176,51 +177,10 @@
                 </div>
             </div>
         </footer>
-
-        <!-- Bottom-Right Small & Useful Music Player -->
-        <div class="sticky-music-player aero-glass" id="musicPlayer">
-            <div class="player-cover-container">
-                <img src="artwork/opium.png" alt="Song Cover" id="playerCover" class="player-cover" draggable="false">
-            </div>
-
-            <div class="player-info-section">
-                <div class="player-text-details">
-                    <span class="player-song-title" id="playerTitle">Loading Queue...</span>
-                    <span class="player-artist-name" id="playerArtist">Opium</span>
-                </div>
-                <div class="player-progress-bar-wrapper">
-                    <span class="time-stamp" id="currentTime">0:00</span>
-                    <input type="range" class="player-slider" id="progressSlider" min="0" max="100" value="0">
-                    <span class="time-stamp" id="durationTime">0:00</span>
-                </div>
-            </div>
-
-            <div class="player-controls-container">
-                <button class="player-control-btn" id="prevBtn" aria-label="Previous Song">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
-                </button>
-                <button class="player-control-btn main-toggle-btn" id="playPauseBtn" aria-label="Play/Pause Toggle">
-                    <svg class="play-icon" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                    <svg class="pause-icon" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-                </button>
-                <button class="player-control-btn" id="nextBtn" aria-label="Next Song">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
-                </button>
-            </div>
-
-            <div class="player-volume-container">
-                <svg class="volume-icon" width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.74 2.5-2.26 2.5-4.02z"/>
-                </svg>
-                <input type="range" class="player-slider volume-slider" id="volumeSlider" min="0" max="1" step="0.01" value="0.8">
-            </div>
-            <audio id="audioEngine" preload="metadata"></audio>
-        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-lua.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
