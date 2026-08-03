@@ -573,3 +573,28 @@ code[class*="language-"] {
     line-height: 1.2;
     transition: color 0.4s ease;
 }
+
+/* Card Icons & Dynamic Theme Inversion */
+.card-icon {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    margin-bottom: 16px;
+    display: block;
+    transition: filter 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s ease;
+}
+
+/* Invert black PNGs to white in Dark Mode */
+:root[data-theme="dark"] .card-icon {
+    filter: invert(1);
+}
+
+/* Keep black PNGs as black in Light Mode */
+:root[data-theme="light"] .card-icon {
+    filter: invert(0);
+}
+
+/* Subtitle micro-interaction on card hover */
+.feature-card:hover .card-icon {
+    transform: scale(1.1);
+}
