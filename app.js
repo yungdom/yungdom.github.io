@@ -6,11 +6,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Theme Switcher Logic
     function toggleTheme() {
+        // Temporarily apply transition class across all elements
+        document.documentElement.classList.add('theme-transition');
+
         const currentTheme = document.documentElement.getAttribute('data-theme');
         const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
         document.documentElement.setAttribute('data-theme', nextTheme);
         localStorage.setItem('theme', nextTheme);
+
+        // Remove transition class after animation completes
+        window.setTimeout(() => {
+            document.documentElement.classList.remove('theme-transition');
+        }, 350);
     }
 
     if (themeToggleBtn) {
