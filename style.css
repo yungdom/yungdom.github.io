@@ -34,7 +34,7 @@
     
     --token-function: #7c3aed;    
     --token-string: #0284c7;      
-    --token-keyword: #6d28d9;     
+    --token-keyword: #6d28d9;      
     --token-punctuation: #374151; 
     --token-plain: #0e0e11;
     --icon-filter: none;
@@ -49,37 +49,41 @@
     user-select: none;
 }
 
+/* Global Smooth Theme Transition Handler */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                fill 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                stroke 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                filter 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
 html, body {
     width: 100%;
-    height: 100%;
+    min-height: 100vh;
     background-color: var(--bg-primary);
     color: var(--text-primary);
     overflow-x: hidden;
-    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Glassmorphism Optimization & Hardware Compositing */
+/* Glassmorphism Optimization */
 .aero-glass {
     background-color: var(--glass-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
     box-shadow: var(--card-shadow);
-    transform: translateZ(0);
     isolation: isolate;
-    will-change: background-color, border-color, box-shadow;
-    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-                border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-                box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .aero-glass-inner {
     background-color: var(--glass-inner);
     border: 1px solid var(--glass-border);
-    transform: translateZ(0);
-    will-change: background-color, border-color;
-    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-                border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .mobile-warning-overlay {
@@ -120,7 +124,6 @@ html, body {
     color: var(--text-secondary);
     font-size: 14px;
     line-height: 1.6;
-    transition: color 0.2s ease;
 }
 
 .desktop-content {
@@ -132,7 +135,7 @@ html, body {
     position: fixed;
     top: 20px;
     left: 50%;
-    transform: translateX(-50%) translateZ(0);
+    transform: translateX(-50%);
     width: calc(100% - 40px);
     max-width: 1100px;
     height: 60px;
@@ -153,7 +156,7 @@ html, body {
     height: 28px;
     width: auto;
     object-fit: contain;
-    filter: none;
+    filter: var(--icon-filter);
 }
 
 .card-icon {
@@ -163,7 +166,7 @@ html, body {
     margin-bottom: 16px;
     display: block;
     filter: var(--icon-filter);
-    transition: filter 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s ease;
+    transition: transform 0.2s ease;
 }
 
 .nav-actions {
@@ -184,7 +187,7 @@ html, body {
     justify-content: center;
     color: var(--text-primary);
     text-decoration: none;
-    transition: transform 0.2s ease, color 0.2s ease;
+    transition: transform 0.2s ease;
 }
 
 .discord-btn:hover,
@@ -219,7 +222,6 @@ html, body {
     pointer-events: none;
     z-index: 0;
     filter: blur(24px);
-    transition: background 0.2s ease;
 }
 
 .hero-grid-pattern {
@@ -231,7 +233,6 @@ html, body {
     opacity: 0.15;
     pointer-events: none;
     z-index: 0;
-    transition: background-image 0.2s ease;
 }
 
 .hero-container {
@@ -248,7 +249,6 @@ html, body {
     margin-bottom: 16px;
     line-height: 1.1;
     color: var(--text-primary);
-    transition: color 0.2s ease;
 }
 
 .gradient-text {
@@ -264,7 +264,6 @@ html, body {
     white-space: nowrap;
     margin: 0 auto;
     line-height: 1.6;
-    transition: color 0.2s ease;
 }
 
 .features-section {
@@ -285,7 +284,7 @@ html, body {
 .feature-card {
     padding: 32px;
     border-radius: 20px;
-    transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease;
 }
 
 .feature-card:hover {
@@ -306,7 +305,6 @@ html, body {
     color: var(--text-secondary);
     font-size: 14px;
     line-height: 1.5;
-    transition: color 0.2s ease;
 }
 
 .showcase-section {
@@ -319,7 +317,6 @@ html, body {
     text-align: center;
     margin-bottom: 40px;
     color: var(--text-primary);
-    transition: color 0.2s ease;
 }
 
 .showcase-grid {
@@ -369,7 +366,6 @@ html, body {
 .download-box p {
     color: var(--text-secondary);
     margin-top: 8px;
-    transition: color 0.2s ease;
 }
 
 .loadstring-container {
@@ -387,7 +383,7 @@ html, body {
     gap: 16px;
 }
 
-/* Prism syntax highlighter fixes for theme toggling */
+/* Prism syntax highlighter fixes */
 .loadstring-pre, 
 .loadstring-bar pre, 
 .loadstring-bar code,
@@ -406,13 +402,12 @@ pre[class*="language-"] {
     text-align: left;
     flex: 1;
     color: var(--token-plain) !important;
-    transition: color 0.2s ease;
 }
 
-.token.function { color: var(--token-function) !important; transition: color 0.2s ease; }
-.token.string { color: var(--token-string) !important; transition: color 0.2s ease; }
-.token.keyword { color: var(--token-keyword) !important; transition: color 0.2s ease; }
-.token.punctuation { color: var(--token-punctuation) !important; transition: color 0.2s ease; }
+.token.function { color: var(--token-function) !important; }
+.token.string { color: var(--token-string) !important; }
+.token.keyword { color: var(--token-keyword) !important; }
+.token.punctuation { color: var(--token-punctuation) !important; }
 
 .btn-copy {
     background: var(--text-primary);
@@ -423,7 +418,7 @@ pre[class*="language-"] {
     font-weight: 700;
     cursor: pointer;
     flex-shrink: 0;
-    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+    transition: transform 0.2s ease;
 }
 
 .btn-copy:hover {
@@ -441,7 +436,6 @@ pre[class*="language-"] {
     margin-top: 14px;
     font-size: 12px;
     color: var(--text-secondary);
-    transition: color 0.2s ease;
 }
 
 .faq-section {
@@ -474,12 +468,11 @@ pre[class*="language-"] {
     font-weight: 600;
     cursor: pointer;
     text-align: left;
-    transition: color 0.2s ease;
 }
 
 .faq-icon {
     font-size: 20px;
-    transition: transform 0.2s ease, color 0.2s ease;
+    transition: transform 0.2s ease;
     line-height: 1;
 }
 
@@ -491,7 +484,7 @@ pre[class*="language-"] {
     max-height: 0;
     opacity: 0;
     overflow: hidden;
-    transition: max-height 0.2s ease, opacity 0.2s ease, padding 0.2s ease;
+    transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
     padding: 0 24px;
 }
 
@@ -504,7 +497,6 @@ pre[class*="language-"] {
     color: var(--text-secondary);
     font-size: 14px;
     line-height: 1.6;
-    transition: color 0.2s ease;
 }
 
 .cta-neon-section {
@@ -522,7 +514,6 @@ pre[class*="language-"] {
     gap: 10px;
     letter-spacing: -1px;
     color: var(--text-primary);
-    transition: color 0.2s ease;
 }
 
 .footer {
@@ -558,5 +549,4 @@ pre[class*="language-"] {
     letter-spacing: -0.2px;
     margin: 0;
     line-height: 1.2;
-    transition: color 0.2s ease;
 }
