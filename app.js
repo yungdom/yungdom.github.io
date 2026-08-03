@@ -1,134 +1,75 @@
 document.addEventListener('DOMContentLoaded', () => {
-    document.addEventListener('contextmenu', (e) => e.preventDefault());
-    document.addEventListener('dragstart', (e) => e.preventDefault());
-    document.addEventListener('selectstart', (e) => e.preventDefault());
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'F12' || e.keyCode === 123) {
-            e.preventDefault();
-            return false;
-        }
-
-        const isControl = e.ctrlKey || e.metaKey;
-        if (isControl) {
-            const keyLower = e.key.toLowerCase();
-            if (e.shiftKey && (keyLower === 'i' || keyLower === 'j' || keyLower === 'c')) {
-                e.preventDefault();
-                return false;
-            }
-            if (keyLower === 'u' || keyLower === 's') {
-                e.preventDefault();
-                return false;
-            }
-        }
-    });
-
     const themeToggleBtn = document.getElementById('themeToggle');
-    const savedTheme = localStorage.getItem('theme');
-    const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    const copyBtn = document.getElementById('copyBtn');
+    const copyText = document.getElementById('copyText');
+    const faqQuestions = document.querySelectorAll('.faq-question');
 
-    if (savedTheme) {
-        document.documentElement.setAttribute('data-theme', savedTheme);
-    } else if (systemPrefersLight) {
-        document.documentElement.setAttribute('data-theme', 'light');
+    // Theme Switcher Logic
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        document.documentElement.setAttribute('data-theme', nextTheme);
+        localStorage.setItem('theme', nextTheme);
     }
 
     if (themeToggleBtn) {
-        themeToggleBtn.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-        });
+        themeToggleBtn.addEventListener('click', toggleTheme);
     }
-    
-    const isMobile = () => {
-        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
-        const isTouchScreen = ('ontouchstart' in window || navigator.maxTouchPoints > 0) && matchMedia('(pointer: coarse)').matches;
-        return mobileRegex.test(userAgent) || isTouchScreen;
-    };
 
-    if (isMobile()) {
-        const desktopContent = document.querySelector('.desktop-content');
-        const mobileOverlay = document.querySelector('.mobile-warning-overlay');
+    // Copy Loader String Logic
+    if (copyBtn) {
+        copyBtn.addEventListener('click', async () => {
+            const loadstringElement = document.getElementById('loadstringText');
+            if (!loadstringElement) return;
 
-        if (desktopContent) desktopContent.style.display = 'none';
-        if (mobileOverlay) mobileOverlay.style.display = 'flex';
-    }
-    
-    const copyBtn = document.getElementById('copyBtn');
-    const copyText = document.getElementById('copyText');
-    const loadstringText = document.getElementById('loadstringText');
+            const textToCopy = loadstringElement.textContent || loadstringElement.innerText;
 
-    if (copyBtn && loadstringText && copyText) {
-        let copyTimeout;
-        copyBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            clearTimeout(copyTimeout);
-            
-            const textToCopy = loadstringText.textContent.trim();
-            
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                copyText.textContent = 'Copied!';
+            try {
+                await navigator.clipboard.writeText(textToCopy);
+                if (copyText) copyText.textContent = 'Copied!';
                 copyBtn.classList.add('copied');
 
-                copyTimeout = setTimeout(() => {
-                    copyText.textContent = 'Copy';
+                setTimeout(() => {
+                    if (copyText) copyText.textContent = 'Copy';
                     copyBtn.classList.remove('copied');
                 }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
-            });
+            } catch (err) {
+                console.error('Failed to copy loader string: ', err);
+            }
         });
     }
-    
-    const faqQuestions = document.querySelectorAll('.faq-question');
-    faqQuestions.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const item = btn.closest('.faq-item');
-            const answer = item.querySelector('.faq-answer');
-            const isActive = item.classList.contains('active');
 
-            document.querySelectorAll('.faq-item').forEach(otherItem => {
-                otherItem.classList.remove('active');
-                otherItem.querySelector('.faq-answer').style.maxHeight = null;
+    // FAQ Accordion Logic
+    faqQuestions.forEach(question => {
+        question.addEventListener('click', () => {
+            const faqItem = question.parentElement;
+            const isOpen = faqItem.classList.contains('active');
+
+            // Close other open FAQ items
+            document.querySelectorAll('.faq-item').forEach(item => {
+                if (item !== faqItem) {
+                    item.classList.remove('active');
+                    const answer = item.querySelector('.faq-answer');
+                    if (answer) answer.style.maxHeight = null;
+                }
             });
 
-            if (!isActive) {
-                item.classList.add('active');
-                answer.style.maxHeight = answer.scrollHeight + 'px';
+            // Toggle selected FAQ item
+            if (isOpen) {
+                faqItem.classList.remove('active');
+                const answer = faqItem.querySelector('.faq-answer');
+                if (answer) answer.style.maxHeight = null;
+            } else {
+                faqItem.classList.add('active');
+                const answer = faqItem.querySelector('.faq-answer');
+                if (answer) answer.style.maxHeight = answer.scrollHeight + 'px';
             }
         });
     });
 
-    const heroBg = document.getElementById('heroBg');
-    let mouseX = 0, mouseY = 0;
-    let targetX = 0, targetY = 0;
-
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX - window.innerWidth / 2;
-        mouseY = e.clientY - window.innerHeight / 2;
-    });
-
-    function renderDynamicMotion() {
-        targetX += (mouseX - targetX) * 0.03;
-        targetY += (mouseY - targetY) * 0.03;
-
-        if (heroBg) {
-            heroBg.style.transform = `translate(calc(-50% + ${targetX * 0.02}px), calc(-50% + ${targetY * 0.02}px))`;
-        }
-        requestAnimationFrame(renderDynamicMotion);
-    }
-    renderDynamicMotion();
-
-    const ytIframe = document.querySelector('.responsive-video iframe');
-    if (ytIframe) {
-        ytIframe.addEventListener('error', () => {
-            console.warn('YouTube embed interrupted. Attempting iframe reset...');
-            setTimeout(() => {
-                ytIframe.src = ytIframe.src;
-            }, 1000);
-        });
+    // Re-highlight syntax cleanly with Prism if loaded
+    if (window.Prism) {
+        window.Prism.highlightAll();
     }
 });
