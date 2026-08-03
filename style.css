@@ -10,11 +10,12 @@
     --accent-gradient: linear-gradient(135deg, #ffffff 0%, #888888 100%);
     --hero-glow: radial-gradient(circle, rgba(255, 255, 255, 0.16) 0%, rgba(7, 7, 8, 0) 70%);
     --card-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
+    
     --token-function: #61afef;
     --token-string: #98c379;
     --token-keyword: #e06c75;
     --token-punctuation: #abb2bf;
-    --bracket-color: #ffffff;
+    --token-plain: #e6e6e6;
     --icon-filter: brightness(0) invert(1);
 }
 
@@ -28,13 +29,14 @@
     --glass-inner: rgba(0, 0, 0, 0.03);
     --accent-color: #0e0e11;
     --accent-gradient: linear-gradient(135deg, #0e0e11 0%, #555555 100%);
-    --hero-glow: radial-gradient(circle, rgba(0, 0, 0, 0.22) 0%, rgba(243, 243, 245, 0) 70%);
+    --hero-glow: radial-gradient(circle, rgba(0, 0, 0, 0.15) 0%, rgba(243, 243, 245, 0) 70%);
     --card-shadow: 0 12px 36px rgba(0, 0, 0, 0.06);
+    
     --token-function: #7c3aed;    
     --token-string: #0284c7;      
     --token-keyword: #6d28d9;     
     --token-punctuation: #374151; 
-    --bracket-color: #0e0e11;
+    --token-plain: #0e0e11;
     --icon-filter: none;
 }
 
@@ -45,7 +47,6 @@
     font-family: 'Plus Jakarta Sans', sans-serif;
     -webkit-user-select: none;
     user-select: none;
-    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, filter 0.2s ease-in-out;
 }
 
 html, body {
@@ -54,25 +55,31 @@ html, body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
     overflow-x: hidden;
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.theme-switching, .theme-switching * {
-    transition: none !important;
-}
-
+/* Glassmorphism Optimization & Hardware Compositing */
 .aero-glass {
-    background: var(--glass-bg);
+    background-color: var(--glass-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
     box-shadow: var(--card-shadow);
-    will-change: background-color, border-color;
+    transform: translateZ(0);
+    isolation: isolate;
+    will-change: background-color, border-color, box-shadow;
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .aero-glass-inner {
-    background: var(--glass-inner);
+    background-color: var(--glass-inner);
     border: 1px solid var(--glass-border);
+    transform: translateZ(0);
     will-change: background-color, border-color;
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .mobile-warning-overlay {
@@ -113,6 +120,7 @@ html, body {
     color: var(--text-secondary);
     font-size: 14px;
     line-height: 1.6;
+    transition: color 0.2s ease;
 }
 
 .desktop-content {
@@ -124,7 +132,7 @@ html, body {
     position: fixed;
     top: 20px;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) translateZ(0);
     width: calc(100% - 40px);
     max-width: 1100px;
     height: 60px;
@@ -155,7 +163,7 @@ html, body {
     margin-bottom: 16px;
     display: block;
     filter: var(--icon-filter);
-    transition: filter 0.2s ease-in-out, transform 0.2s ease;
+    transition: filter 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s ease;
 }
 
 .nav-actions {
@@ -166,8 +174,8 @@ html, body {
 
 .discord-btn,
 .theme-toggle-btn {
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     cursor: pointer;
     background: transparent;
@@ -176,7 +184,7 @@ html, body {
     justify-content: center;
     color: var(--text-primary);
     text-decoration: none;
-    transition: transform 0.2s ease, color 0.2s ease-in-out;
+    transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .discord-btn:hover,
@@ -211,6 +219,7 @@ html, body {
     pointer-events: none;
     z-index: 0;
     filter: blur(24px);
+    transition: background 0.2s ease;
 }
 
 .hero-grid-pattern {
@@ -222,6 +231,7 @@ html, body {
     opacity: 0.15;
     pointer-events: none;
     z-index: 0;
+    transition: background-image 0.2s ease;
 }
 
 .hero-container {
@@ -237,12 +247,15 @@ html, body {
     letter-spacing: -2px;
     margin-bottom: 16px;
     line-height: 1.1;
+    color: var(--text-primary);
+    transition: color 0.2s ease;
 }
 
 .gradient-text {
     background: var(--accent-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    display: inline-block;
 }
 
 .hero-subtitle {
@@ -251,6 +264,7 @@ html, body {
     white-space: nowrap;
     margin: 0 auto;
     line-height: 1.6;
+    transition: color 0.2s ease;
 }
 
 .features-section {
@@ -271,7 +285,7 @@ html, body {
 .feature-card {
     padding: 32px;
     border-radius: 20px;
-    transition: transform 0.2s ease, color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .feature-card:hover {
@@ -292,6 +306,7 @@ html, body {
     color: var(--text-secondary);
     font-size: 14px;
     line-height: 1.5;
+    transition: color 0.2s ease;
 }
 
 .showcase-section {
@@ -303,6 +318,8 @@ html, body {
     font-weight: 800;
     text-align: center;
     margin-bottom: 40px;
+    color: var(--text-primary);
+    transition: color 0.2s ease;
 }
 
 .showcase-grid {
@@ -349,6 +366,12 @@ html, body {
     margin: 0 auto;
 }
 
+.download-box p {
+    color: var(--text-secondary);
+    margin-top: 8px;
+    transition: color 0.2s ease;
+}
+
 .loadstring-container {
     margin-top: 24px;
 }
@@ -364,11 +387,12 @@ html, body {
     gap: 16px;
 }
 
+/* Prism syntax highlighter fixes for theme toggling */
 .loadstring-pre, 
 .loadstring-bar pre, 
 .loadstring-bar code,
-pre[class*="language-"],
-code[class*="language-"] {
+code[class*="language-"],
+pre[class*="language-"] {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
@@ -381,13 +405,14 @@ code[class*="language-"] {
     white-space: nowrap;
     text-align: left;
     flex: 1;
-    color: var(--text-primary) !important;
+    color: var(--token-plain) !important;
+    transition: color 0.2s ease;
 }
 
-.token.function { color: var(--token-function) !important; }
-.token.string { color: var(--token-string) !important; }
-.token.keyword { color: var(--token-keyword) !important; }
-.token.punctuation { color: var(--token-punctuation) !important; }
+.token.function { color: var(--token-function) !important; transition: color 0.2s ease; }
+.token.string { color: var(--token-string) !important; transition: color 0.2s ease; }
+.token.keyword { color: var(--token-keyword) !important; transition: color 0.2s ease; }
+.token.punctuation { color: var(--token-punctuation) !important; transition: color 0.2s ease; }
 
 .btn-copy {
     background: var(--text-primary);
@@ -398,7 +423,7 @@ code[class*="language-"] {
     font-weight: 700;
     cursor: pointer;
     flex-shrink: 0;
-    transition: transform 0.2s ease, background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
 .btn-copy:hover {
@@ -416,6 +441,7 @@ code[class*="language-"] {
     margin-top: 14px;
     font-size: 12px;
     color: var(--text-secondary);
+    transition: color 0.2s ease;
 }
 
 .faq-section {
@@ -448,11 +474,12 @@ code[class*="language-"] {
     font-weight: 600;
     cursor: pointer;
     text-align: left;
+    transition: color 0.2s ease;
 }
 
 .faq-icon {
     font-size: 20px;
-    transition: transform 0.2s ease, color 0.2s ease-in-out;
+    transition: transform 0.2s ease, color 0.2s ease;
     line-height: 1;
 }
 
@@ -477,6 +504,7 @@ code[class*="language-"] {
     color: var(--text-secondary);
     font-size: 14px;
     line-height: 1.6;
+    transition: color 0.2s ease;
 }
 
 .cta-neon-section {
@@ -493,6 +521,8 @@ code[class*="language-"] {
     justify-content: center;
     gap: 10px;
     letter-spacing: -1px;
+    color: var(--text-primary);
+    transition: color 0.2s ease;
 }
 
 .footer {
@@ -528,4 +558,5 @@ code[class*="language-"] {
     letter-spacing: -0.2px;
     margin: 0;
     line-height: 1.2;
+    transition: color 0.2s ease;
 }
