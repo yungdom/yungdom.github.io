@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Security & Lock Interactions (Prevent Context Menu, Dragging, Select & DevTools)
     document.addEventListener('contextmenu', (e) => e.preventDefault());
     document.addEventListener('dragstart', (e) => e.preventDefault());
     document.addEventListener('selectstart', (e) => e.preventDefault());
@@ -24,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 2. Smooth Theme Toggle Handler
     const themeToggleBtn = document.getElementById('themeToggle');
     const savedTheme = localStorage.getItem('theme');
     const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
@@ -43,8 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('theme', newTheme);
         });
     }
-
-    // 3. Mobile Device Guard
+    
     const isMobile = () => {
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
         const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
@@ -59,8 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (desktopContent) desktopContent.style.display = 'none';
         if (mobileOverlay) mobileOverlay.style.display = 'flex';
     }
-
-    // 4. Try It or Lose It Copy Button Animation & Clipboard Logic
+    
     const copyBtn = document.getElementById('copyBtn');
     const copyText = document.getElementById('copyText');
     const loadstringText = document.getElementById('loadstringText');
@@ -86,8 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-
-    // 5. FAQ Accordion Handler
+    
     const faqQuestions = document.querySelectorAll('.faq-question');
     faqQuestions.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -107,7 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 6. Smooth Mouse Parallax Motion for Hero Ambient Backdrop
     const heroBg = document.getElementById('heroBg');
     let mouseX = 0, mouseY = 0;
     let targetX = 0, targetY = 0;
@@ -128,7 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     renderDynamicMotion();
 
-    // 7. YouTube Load Reliability & Fallback Handler
     const ytIframe = document.querySelector('.responsive-video iframe');
     if (ytIframe) {
         ytIframe.addEventListener('error', () => {
