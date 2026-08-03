@@ -10,6 +10,9 @@
     --accent-color: #ffffff;
     --accent-gradient: linear-gradient(135deg, #ffffff 0%, #888888 100%);
     
+    /* Dynamic filter to make black icons pure white in dark mode */
+    --icon-filter: invert(1);
+    
     /* White Neon Ambient Glow behind Accuracy Defined text */
     --hero-glow: radial-gradient(circle, rgba(255, 255, 255, 0.16) 0%, rgba(7, 7, 8, 0) 70%);
     --card-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
@@ -32,6 +35,9 @@
     --glass-inner: rgba(0, 0, 0, 0.03);
     --accent-color: #0e0e11;
     --accent-gradient: linear-gradient(135deg, #0e0e11 0%, #555555 100%);
+    
+    /* Filter off in light mode so icons remain black */
+    --icon-filter: invert(0);
     
     /* Black Neon Ambient Glow behind Accuracy Defined text */
     --hero-glow: radial-gradient(circle, rgba(0, 0, 0, 0.22) 0%, rgba(243, 243, 245, 0) 70%);
@@ -288,6 +294,21 @@ html, body {
 .feature-card:hover {
     transform: translateY(-4px);
     border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Card Icons with Smooth Theme Inversion */
+.card-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    margin-bottom: 16px;
+    display: block;
+    filter: var(--icon-filter);
+    transition: filter 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.feature-card:hover .card-icon {
+    transform: scale(1.08);
 }
 
 .feature-card h3 {
@@ -572,29 +593,4 @@ code[class*="language-"] {
     margin: 0;
     line-height: 1.2;
     transition: color 0.4s ease;
-}
-
-/* Card Icons & Dynamic Theme Inversion */
-.card-icon {
-    width: 36px;
-    height: 36px;
-    object-fit: contain;
-    margin-bottom: 16px;
-    display: block;
-    transition: filter 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s ease;
-}
-
-/* Invert black PNGs to white in Dark Mode */
-:root[data-theme="dark"] .card-icon {
-    filter: invert(1);
-}
-
-/* Keep black PNGs as black in Light Mode */
-:root[data-theme="light"] .card-icon {
-    filter: invert(0);
-}
-
-/* Subtitle micro-interaction on card hover */
-.feature-card:hover .card-icon {
-    transform: scale(1.1);
 }
