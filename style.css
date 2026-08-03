@@ -12,16 +12,17 @@
     --accent-color: #ffffff;
     --accent-gradient: linear-gradient(135deg, #ffffff 0%, #888888 100%);
     
-    /* White Neon Ambient Glow behind Accuracy Defined text */
     --hero-glow: radial-gradient(circle, rgba(255, 255, 255, 0.16) 0%, rgba(7, 7, 8, 0) 70%);
     --card-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
 
-    /* Code Highlight Colors */
     --token-function: #61afef;
     --token-string: #98c379;
     --token-keyword: #e06c75;
     --token-punctuation: #abb2bf;
     --bracket-color: #ffffff;
+
+    /* Theme Inversion Filter */
+    --img-filter: invert(100%);
 }
 
 :root[data-theme="light"] {
@@ -35,43 +36,27 @@
     --accent-color: #0e0e11;
     --accent-gradient: linear-gradient(135deg, #0e0e11 0%, #555555 100%);
     
-    /* Black Neon Ambient Glow behind Accuracy Defined text */
     --hero-glow: radial-gradient(circle, rgba(0, 0, 0, 0.22) 0%, rgba(243, 243, 245, 0) 70%);
     --card-shadow: 0 12px 36px rgba(0, 0, 0, 0.06);
 
-    /* Light Mode Syntax Colors */
     --token-function: #7c3aed;    
     --token-string: #0284c7;      
     --token-keyword: #6d28d9;     
     --token-punctuation: #374151; 
     --bracket-color: #0e0e11;
+
+    /* Theme Inversion Filter */
+    --img-filter: invert(0%);
 }
 
-/* ==========================================================================
-   2. Base Styles & Global Reset
-   ========================================================================== */
-* {
+/* Global Transition Control for Theme Stability */
+*, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
     font-family: 'Plus Jakarta Sans', sans-serif;
-
     -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
-
-    -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
-    user-drag: none;
-}
-
-img, svg, a, button {
-    -webkit-user-drag: none;
-    user-drag: none;
-    pointer-events: auto;
 }
 
 html, body {
@@ -80,12 +65,12 @@ html, body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
     overflow-x: hidden;
-    transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-                color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    /* Explicit property transition prevents visual glitching */
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ==========================================================================
-   3. Glassmorphism Components
+   2. Glassmorphism Components
    ========================================================================== */
 .aero-glass {
     background: var(--glass-bg);
@@ -93,53 +78,40 @@ html, body {
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
     box-shadow: var(--card-shadow);
-    transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-                border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .aero-glass-inner {
     background: var(--glass-inner);
     border: 1px solid var(--glass-border);
-    transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-                border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 /* ==========================================================================
-   4. Mobile Warning Overlay
+   3. Stable Theme Inversion Strategy (Asset Rendering)
    ========================================================================== */
-.mobile-warning-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    background: var(--bg-primary);
+.card-icon,
+.nav-logo,
+.footer-logo {
+    filter: var(--img-filter);
+    transition: filter 0.3s ease, transform 0.2s ease;
+    will-change: filter;
 }
 
-.mobile-warning-box {
-    padding: 32px;
-    border-radius: 20px;
-    text-align: center;
-    max-width: 400px;
+.card-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    margin-bottom: 16px;
+    display: block;
 }
 
-.mobile-warning-title {
-    font-size: 24px;
-    font-weight: 800;
-    margin-bottom: 12px;
-}
-
-.mobile-warning-text {
-    color: var(--text-secondary);
-    font-size: 14px;
-    line-height: 1.6;
+.feature-card:hover .card-icon {
+    transform: scale(1.08);
 }
 
 /* ==========================================================================
-   5. Desktop Main Shell & Navbar
+   4. Navbar & Buttons
    ========================================================================== */
 .desktop-content {
     width: 100%;
@@ -189,9 +161,7 @@ html, body {
     justify-content: center;
     color: var(--text-primary);
     text-decoration: none;
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
-                background-color 0.3s ease, 
-                color 0.3s ease;
+    transition: transform 0.2s ease, color 0.3s ease;
 }
 
 .discord-btn:hover,
@@ -205,7 +175,7 @@ html, body {
 :root[data-theme="light"] .moon-icon { display: block; }
 
 /* ==========================================================================
-   6. Hero Section & Ambient Neon Backing
+   5. Hero Section
    ========================================================================== */
 .hero-section {
     position: relative;
@@ -229,7 +199,7 @@ html, body {
     pointer-events: none;
     z-index: 0;
     filter: blur(24px);
-    transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background 0.3s ease;
 }
 
 .hero-grid-pattern {
@@ -241,7 +211,6 @@ html, body {
     opacity: 0.15;
     pointer-events: none;
     z-index: 0;
-    transition: background-image 0.4s ease;
 }
 
 .hero-container {
@@ -263,7 +232,6 @@ html, body {
     background: var(--accent-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    transition: background 0.4s ease;
 }
 
 .hero-subtitle {
@@ -272,11 +240,11 @@ html, body {
     white-space: nowrap;
     margin: 0 auto;
     line-height: 1.6;
-    transition: color 0.4s ease;
+    transition: color 0.3s ease;
 }
 
 /* ==========================================================================
-   7. Features Grid & Image Inversion Smooth Transitions
+   6. Features Section
    ========================================================================== */
 .features-section {
     padding: 40px 20px;
@@ -296,49 +264,12 @@ html, body {
 .feature-card {
     padding: 32px;
     border-radius: 20px;
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
-                border-color 0.3s ease, 
-                box-shadow 0.3s ease, 
-                background 0.4s ease;
+    transition: transform 0.2s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .feature-card:hover {
     transform: translateY(-4px);
     border-color: rgba(255, 255, 255, 0.25);
-}
-
-/* Explicit Image Inversion Setup */
-.card-icon,
-.nav-logo,
-.footer-logo {
-    transition: filter 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: filter;
-}
-
-/* Invert black PNGs to white in Dark Mode */
-:root[data-theme="dark"] .card-icon,
-:root[data-theme="dark"] .nav-logo,
-:root[data-theme="dark"] .footer-logo {
-    filter: invert(100%);
-}
-
-/* Keep black PNGs black in Light Mode */
-:root[data-theme="light"] .card-icon,
-:root[data-theme="light"] .nav-logo,
-:root[data-theme="light"] .footer-logo {
-    filter: invert(0%);
-}
-
-.card-icon {
-    width: 32px;
-    height: 32px;
-    object-fit: contain;
-    margin-bottom: 16px;
-    display: block;
-}
-
-.feature-card:hover .card-icon {
-    transform: scale(1.08);
 }
 
 .feature-card h3 {
@@ -350,11 +281,11 @@ html, body {
     color: var(--text-secondary);
     font-size: 14px;
     line-height: 1.5;
-    transition: color 0.4s ease;
+    transition: color 0.3s ease;
 }
 
 /* ==========================================================================
-   8. Showcase Video Section
+   7. Showcase Video Section
    ========================================================================== */
 .showcase-section {
     padding: 60px 20px;
@@ -365,7 +296,7 @@ html, body {
     font-weight: 800;
     text-align: center;
     margin-bottom: 40px;
-    transition: color 0.4s ease;
+    transition: color 0.3s ease;
 }
 
 .showcase-grid {
@@ -377,7 +308,6 @@ html, body {
     border-radius: 20px;
     overflow: hidden;
     padding: 12px;
-    box-shadow: var(--card-shadow);
 }
 
 .responsive-video {
@@ -402,7 +332,7 @@ html, body {
 }
 
 /* ==========================================================================
-   9. Download / Loader Block
+   8. Loader / Download Box
    ========================================================================== */
 .download-section {
     padding: 60px 20px;
@@ -449,13 +379,13 @@ code[class*="language-"] {
     text-align: left;
     flex: 1;
     color: var(--text-primary) !important;
-    transition: color 0.4s ease;
+    transition: color 0.3s ease;
 }
 
-.token.function { color: var(--token-function) !important; transition: color 0.4s ease; }
-.token.string { color: var(--token-string) !important; transition: color 0.4s ease; }
-.token.keyword { color: var(--token-keyword) !important; transition: color 0.4s ease; }
-.token.punctuation { color: var(--token-punctuation) !important; transition: color 0.4s ease; }
+.token.function { color: var(--token-function) !important; transition: color 0.3s ease; }
+.token.string { color: var(--token-string) !important; transition: color 0.3s ease; }
+.token.keyword { color: var(--token-keyword) !important; transition: color 0.3s ease; }
+.token.punctuation { color: var(--token-punctuation) !important; transition: color 0.3s ease; }
 
 .btn-copy {
     background: var(--text-primary);
@@ -466,7 +396,7 @@ code[class*="language-"] {
     font-weight: 700;
     cursor: pointer;
     flex-shrink: 0;
-    transition: background 0.4s ease, color 0.4s ease, transform 0.2s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-copy:hover {
@@ -484,11 +414,11 @@ code[class*="language-"] {
     margin-top: 14px;
     font-size: 12px;
     color: var(--text-secondary);
-    transition: color 0.4s ease;
+    transition: color 0.3s ease;
 }
 
 /* ==========================================================================
-   10. FAQ Accordion
+   9. FAQ Accordion
    ========================================================================== */
 .faq-section {
     padding: 60px 20px;
@@ -520,12 +450,12 @@ code[class*="language-"] {
     font-weight: 600;
     cursor: pointer;
     text-align: left;
-    transition: color 0.4s ease;
+    transition: color 0.3s ease;
 }
 
 .faq-icon {
     font-size: 20px;
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.3s ease;
     line-height: 1;
 }
 
@@ -537,7 +467,7 @@ code[class*="language-"] {
     max-height: 0;
     opacity: 0;
     overflow: hidden;
-    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, padding 0.3s ease;
+    transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
     padding: 0 24px;
 }
 
@@ -550,11 +480,11 @@ code[class*="language-"] {
     color: var(--text-secondary);
     font-size: 14px;
     line-height: 1.6;
-    transition: color 0.4s ease;
+    transition: color 0.3s ease;
 }
 
 /* ==========================================================================
-   11. CTA Section
+   10. CTA & Footer
    ========================================================================== */
 .cta-neon-section {
     padding: 80px 20px;
@@ -572,9 +502,6 @@ code[class*="language-"] {
     letter-spacing: -1px;
 }
 
-/* ==========================================================================
-   12. Footer Section
-   ========================================================================== */
 .footer {
     padding: 20px 20px 40px 20px;
     display: flex;
@@ -601,22 +528,6 @@ code[class*="language-"] {
     text-align: center;
 }
 
-.logo-bracket-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.logo-bracket {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--bracket-color);
-    line-height: 1;
-    user-select: none;
-    transition: color 0.4s ease;
-}
-
 .footer-logo {
     height: 24px;
     width: auto;
@@ -632,5 +543,5 @@ code[class*="language-"] {
     letter-spacing: -0.2px;
     margin: 0;
     line-height: 1.2;
-    transition: color 0.4s ease;
+    transition: color 0.3s ease;
 }
