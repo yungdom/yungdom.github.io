@@ -21,8 +21,8 @@
     --token-punctuation: #abb2bf;
     --bracket-color: #ffffff;
 
-    /* Theme Inversion Filter */
-    --img-filter: invert(100%);
+    /* Monochrome icon inversion without hue distortion */
+    --icon-filter: brightness(0) invert(1);
 }
 
 :root[data-theme="light"] {
@@ -45,11 +45,12 @@
     --token-punctuation: #374151; 
     --bracket-color: #0e0e11;
 
-    /* Theme Inversion Filter */
-    --img-filter: invert(0%);
+    --icon-filter: none;
 }
 
-/* Global Transition Control for Theme Stability */
+/* ==========================================================================
+   2. Global Reset & Base
+   ========================================================================== */
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -65,12 +66,11 @@ html, body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
     overflow-x: hidden;
-    /* Explicit property transition prevents visual glitching */
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ==========================================================================
-   2. Glassmorphism Components
+   3. Glassmorphism Components
    ========================================================================== */
 .aero-glass {
     background: var(--glass-bg);
@@ -88,30 +88,50 @@ html, body {
 }
 
 /* ==========================================================================
-   3. Stable Theme Inversion Strategy (Asset Rendering)
+   4. Mobile Warning Overlay (Strict Desktop Hiding)
    ========================================================================== */
-.card-icon,
-.nav-logo,
-.footer-logo {
-    filter: var(--img-filter);
-    transition: filter 0.3s ease, transform 0.2s ease;
-    will-change: filter;
+.mobile-warning-overlay {
+    display: none !important;
 }
 
-.card-icon {
-    width: 32px;
-    height: 32px;
-    object-fit: contain;
-    margin-bottom: 16px;
-    display: block;
+@media (max-width: 768px) {
+    .mobile-warning-overlay {
+        display: flex !important;
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: var(--bg-primary);
+    }
+
+    .desktop-content {
+        display: none !important;
+    }
 }
 
-.feature-card:hover .card-icon {
-    transform: scale(1.08);
+.mobile-warning-box {
+    padding: 32px;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 400px;
+}
+
+.mobile-warning-title {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.mobile-warning-text {
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.6;
 }
 
 /* ==========================================================================
-   4. Navbar & Buttons
+   5. Desktop Layout & Navbar
    ========================================================================== */
 .desktop-content {
     width: 100%;
@@ -138,9 +158,24 @@ html, body {
     height: 100%;
 }
 
-.nav-logo {
+/* Brand logo keeps natural brand colors */
+.nav-logo,
+.footer-logo {
     height: 28px;
     width: auto;
+    object-fit: contain;
+    filter: none;
+}
+
+/* Feature icons invert cleanly to white without green hue shifts */
+.card-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    margin-bottom: 16px;
+    display: block;
+    filter: var(--icon-filter);
+    transition: filter 0.3s ease, transform 0.2s ease;
 }
 
 .nav-actions {
@@ -175,7 +210,7 @@ html, body {
 :root[data-theme="light"] .moon-icon { display: block; }
 
 /* ==========================================================================
-   5. Hero Section
+   6. Hero Section
    ========================================================================== */
 .hero-section {
     position: relative;
@@ -244,7 +279,7 @@ html, body {
 }
 
 /* ==========================================================================
-   6. Features Section
+   7. Features Grid
    ========================================================================== */
 .features-section {
     padding: 40px 20px;
@@ -272,6 +307,10 @@ html, body {
     border-color: rgba(255, 255, 255, 0.25);
 }
 
+.feature-card:hover .card-icon {
+    transform: scale(1.08);
+}
+
 .feature-card h3 {
     font-size: 20px;
     margin-bottom: 10px;
@@ -285,7 +324,7 @@ html, body {
 }
 
 /* ==========================================================================
-   7. Showcase Video Section
+   8. Showcase Video Section
    ========================================================================== */
 .showcase-section {
     padding: 60px 20px;
@@ -332,7 +371,7 @@ html, body {
 }
 
 /* ==========================================================================
-   8. Loader / Download Box
+   9. Download / Script Loader Section
    ========================================================================== */
 .download-section {
     padding: 60px 20px;
@@ -418,7 +457,7 @@ code[class*="language-"] {
 }
 
 /* ==========================================================================
-   9. FAQ Accordion
+   10. FAQ Accordion
    ========================================================================== */
 .faq-section {
     padding: 60px 20px;
@@ -484,7 +523,7 @@ code[class*="language-"] {
 }
 
 /* ==========================================================================
-   10. CTA & Footer
+   11. Footer Section
    ========================================================================== */
 .cta-neon-section {
     padding: 80px 20px;
@@ -526,14 +565,6 @@ code[class*="language-"] {
     justify-content: center;
     gap: 10px;
     text-align: center;
-}
-
-.footer-logo {
-    height: 24px;
-    width: auto;
-    object-fit: contain;
-    border-radius: 4px;
-    display: block;
 }
 
 .disclaimer-text {
