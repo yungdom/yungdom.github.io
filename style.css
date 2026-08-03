@@ -1,4 +1,6 @@
-/* Theme Custom Variables */
+/* ==========================================================================
+   1. Theme Custom Variables
+   ========================================================================== */
 :root[data-theme="dark"] {
     --bg-primary: #070708;
     --bg-secondary: #121214;
@@ -9,9 +11,6 @@
     --glass-inner: rgba(255, 255, 255, 0.04);
     --accent-color: #ffffff;
     --accent-gradient: linear-gradient(135deg, #ffffff 0%, #888888 100%);
-    
-    /* Dynamic filter to make black icons pure white in dark mode */
-    --icon-filter: invert(1);
     
     /* White Neon Ambient Glow behind Accuracy Defined text */
     --hero-glow: radial-gradient(circle, rgba(255, 255, 255, 0.16) 0%, rgba(7, 7, 8, 0) 70%);
@@ -36,9 +35,6 @@
     --accent-color: #0e0e11;
     --accent-gradient: linear-gradient(135deg, #0e0e11 0%, #555555 100%);
     
-    /* Filter off in light mode so icons remain black */
-    --icon-filter: invert(0);
-    
     /* Black Neon Ambient Glow behind Accuracy Defined text */
     --hero-glow: radial-gradient(circle, rgba(0, 0, 0, 0.22) 0%, rgba(243, 243, 245, 0) 70%);
     --card-shadow: 0 12px 36px rgba(0, 0, 0, 0.06);
@@ -51,7 +47,9 @@
     --bracket-color: #0e0e11;
 }
 
-/* Base Styles & Smooth Color/Theme Transitions */
+/* ==========================================================================
+   2. Base Styles & Global Reset
+   ========================================================================== */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -82,10 +80,13 @@ html, body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
     overflow-x: hidden;
-    transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Glassmorphism Components */
+/* ==========================================================================
+   3. Glassmorphism Components
+   ========================================================================== */
 .aero-glass {
     background: var(--glass-bg);
     backdrop-filter: blur(20px);
@@ -100,10 +101,13 @@ html, body {
 .aero-glass-inner {
     background: var(--glass-inner);
     border: 1px solid var(--glass-border);
-    transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Mobile Warning Overlay */
+/* ==========================================================================
+   4. Mobile Warning Overlay
+   ========================================================================== */
 .mobile-warning-overlay {
     display: none;
     position: fixed;
@@ -134,13 +138,14 @@ html, body {
     line-height: 1.6;
 }
 
-/* Desktop Main Shell */
+/* ==========================================================================
+   5. Desktop Main Shell & Navbar
+   ========================================================================== */
 .desktop-content {
     width: 100%;
     position: relative;
 }
 
-/* Navbar */
 .navbar {
     position: fixed;
     top: 20px;
@@ -184,7 +189,9 @@ html, body {
     justify-content: center;
     color: var(--text-primary);
     text-decoration: none;
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, color 0.3s ease;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+                background-color 0.3s ease, 
+                color 0.3s ease;
 }
 
 .discord-btn:hover,
@@ -197,7 +204,9 @@ html, body {
 :root[data-theme="light"] .sun-icon { display: none; }
 :root[data-theme="light"] .moon-icon { display: block; }
 
-/* Hero Section & Glowing Neon Backing */
+/* ==========================================================================
+   6. Hero Section & Ambient Neon Backing
+   ========================================================================== */
 .hero-section {
     position: relative;
     min-height: 75vh;
@@ -266,7 +275,9 @@ html, body {
     transition: color 0.4s ease;
 }
 
-/* Features Grid */
+/* ==========================================================================
+   7. Features Grid & Image Inversion Smooth Transitions
+   ========================================================================== */
 .features-section {
     padding: 40px 20px;
 }
@@ -296,15 +307,34 @@ html, body {
     border-color: rgba(255, 255, 255, 0.25);
 }
 
-/* Card Icons with Smooth Theme Inversion */
+/* Explicit Image Inversion Setup */
+.card-icon,
+.nav-logo,
+.footer-logo {
+    transition: filter 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: filter;
+}
+
+/* Invert black PNGs to white in Dark Mode */
+:root[data-theme="dark"] .card-icon,
+:root[data-theme="dark"] .nav-logo,
+:root[data-theme="dark"] .footer-logo {
+    filter: invert(100%);
+}
+
+/* Keep black PNGs black in Light Mode */
+:root[data-theme="light"] .card-icon,
+:root[data-theme="light"] .nav-logo,
+:root[data-theme="light"] .footer-logo {
+    filter: invert(0%);
+}
+
 .card-icon {
     width: 32px;
     height: 32px;
     object-fit: contain;
     margin-bottom: 16px;
     display: block;
-    filter: var(--icon-filter);
-    transition: filter 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .feature-card:hover .card-icon {
@@ -323,7 +353,9 @@ html, body {
     transition: color 0.4s ease;
 }
 
-/* Showcase Video Section - Fixed Aspect Ratio Frame */
+/* ==========================================================================
+   8. Showcase Video Section
+   ========================================================================== */
 .showcase-section {
     padding: 60px 20px;
 }
@@ -369,7 +401,9 @@ html, body {
     z-index: 10;
 }
 
-/* Download / Execution Block */
+/* ==========================================================================
+   9. Download / Loader Block
+   ========================================================================== */
 .download-section {
     padding: 60px 20px;
 }
@@ -453,7 +487,9 @@ code[class*="language-"] {
     transition: color 0.4s ease;
 }
 
-/* FAQ Accordion */
+/* ==========================================================================
+   10. FAQ Accordion
+   ========================================================================== */
 .faq-section {
     padding: 60px 20px;
 }
@@ -517,7 +553,9 @@ code[class*="language-"] {
     transition: color 0.4s ease;
 }
 
-/* CTA Section */
+/* ==========================================================================
+   11. CTA Section
+   ========================================================================== */
 .cta-neon-section {
     padding: 80px 20px;
     text-align: center;
@@ -534,7 +572,9 @@ code[class*="language-"] {
     letter-spacing: -1px;
 }
 
-/* Footer Section */
+/* ==========================================================================
+   12. Footer Section
+   ========================================================================== */
 .footer {
     padding: 20px 20px 40px 20px;
     display: flex;
